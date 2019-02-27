@@ -8,7 +8,7 @@ public class Badge {
 	   public Badge(){}
            
            
-	   public Badge(String description, String id){
+	   public Badge(String id, String description){
 		this.description = description;
 		this.id = id;
 	}
