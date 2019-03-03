@@ -1,30 +1,95 @@
 package cs310.team.project;
 
 import java.util.*;
+import java.text.SimpleDateFormat;
 
 public class Punch {
-    private int shiftId = 0;
-    private String punchId = 0;
+
+    public Punch(){}
+    
     private Badge badge;
     private int terminalId;
+    private int punchId;
+    private int eventtypeid = 0;
+    private int shiftId = 0;
+    private String formattedTime;
+    private String punchType = null;
     private GregorianCalendar originalTS;
     private GregorianCalendar adjustedTS = null;
-    private int eventtypeid = 0;
-    private int punchTypeId;
+
+    
 
     public Punch(Badge badge, int terminalId,int punchTypeId) {
 
     originalTS = new GregorianCalendar();
-    adjustedTS = null;
     this.terminalId = terminalId;
     this.badge = badge;
-    this.punchTypeId = punchTypeId;
-
+    this.punchId = punchTypeId;
+    formattedTime = new SimpleDateFormat("EEE MM/dd/YYYY HH:mm:ss").format(originalTS.getTime()).toUpperCase();
     }
 
-    public String getBadge() {
+    public void setBadge(Badge badge) {
+        this.badge = badge;
+    }
 
-        return badgeId;
+    public void setTerminalId(int terminalId) {
+        this.terminalId = terminalId;
+    }
+
+    public void setPunchId(int punchId) {
+        this.punchId = punchId;
+    }
+
+    public void setPunchType(String punchType) {
+        this.punchType = punchType;
+    }
+    
+    public void setEventtypeid(int eventtypeid) {
+        this.eventtypeid = eventtypeid;
+    }
+
+    public void setShiftId(int shiftId) {
+        this.shiftId = shiftId;
+    }
+
+    public void setFormattedTime(String formattedTime) {
+        this.formattedTime = formattedTime;
+    }
+
+    public void setOriginalTS(GregorianCalendar originalTS) {
+        this.originalTS = originalTS;
+    }
+
+    public void setAdjustedTS(GregorianCalendar adjustedTS) {
+        this.adjustedTS = adjustedTS;
+    }
+
+    public int getPunchId() {
+        return punchId;
+    }
+    
+    public String getPunchType() {
+        return punchType;
+    }
+    public int getEventtypeid() {
+        return eventtypeid;
+    }
+
+    public GregorianCalendar getAdjustedTS() {
+        return adjustedTS;
+    }
+    
+    public String getFormattedTime() {
+        return formattedTime;
+    }
+
+    public GregorianCalendar getOriginalTS() {
+        return originalTS;
+    }
+
+    public Badge getBadge() {
+
+        return badge;
     }
 
     public int getTerminalId() {
@@ -60,29 +125,6 @@ public class Punch {
             Status = " TIMED OUT: ";
         }
 
-        return "#" + badgeId + Status;
+        return badge + Status + formattedTime;
     }
- //Code to be implemented later is below...
-/*
-    public GregorianCalendar getAdjustedTimeStamp() {
-
-        return adjusted;
-    }
-
-    public int geteventtypeid(){
-
-        return eventtypeid;
-    }
-
-    public void setPunchId(String punchId) {
-
-        this.punchId = punchId;
-    }
-
-    public String getPunchId() {
-    
-        return punchId;
-    }
-*/
-
 }
