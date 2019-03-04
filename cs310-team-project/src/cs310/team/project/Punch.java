@@ -8,12 +8,12 @@ public class Punch {
     public Punch(){}
     
     private Badge badge;
+    private String BadgeId;
     private int terminalId;
     private int punchId;
     private int eventtypeid = 0;
     private int shiftId = 0;
-    private String formattedTime;
-    private String punchType = null;
+    private int punchType = 0;
     private GregorianCalendar originalTS;
     private GregorianCalendar adjustedTS = null;
 
@@ -25,7 +25,7 @@ public class Punch {
     this.terminalId = terminalId;
     this.badge = badge;
     this.punchId = punchTypeId;
-    formattedTime = new SimpleDateFormat("EEE MM/dd/YYYY HH:mm:ss").format(originalTS.getTime()).toUpperCase();
+    
     }
 
     public void setBadge(Badge badge) {
@@ -66,6 +66,10 @@ public class Punch {
 
     public int getPunchId() {
         return punchId;
+    }
+    
+    public String getBadgeId() {
+        return BadgeId;
     }
     
     public String getPunchType() {
@@ -124,7 +128,7 @@ public class Punch {
         else {
             Status = " TIMED OUT: ";
         }
-
+        String formattedTime = new SimpleDateFormat("EEE MM/dd/YYYY HH:mm:ss").format(originalTS.getTime()).toUpperCase();
         return badge + Status + formattedTime;
     }
 }
