@@ -40,7 +40,7 @@ public class Punch {
         this.punchId = punchId;
     }
 
-    public void setPunchType(String punchType) {
+    public void setPunchType(int punchType) {
         this.punchType = punchType;
     }
     
@@ -52,9 +52,6 @@ public class Punch {
         this.shiftId = shiftId;
     }
 
-    public void setFormattedTime(String formattedTime) {
-        this.formattedTime = formattedTime;
-    }
 
     public void setOriginalTS(GregorianCalendar originalTS) {
         this.originalTS = originalTS;
@@ -72,7 +69,7 @@ public class Punch {
         return BadgeId;
     }
     
-    public String getPunchType() {
+    public int getPunchType() {
         return punchType;
     }
     public int getEventtypeid() {
@@ -81,10 +78,6 @@ public class Punch {
 
     public GregorianCalendar getAdjustedTS() {
         return adjustedTS;
-    }
-    
-    public String getFormattedTime() {
-        return formattedTime;
     }
 
     public GregorianCalendar getOriginalTS() {
