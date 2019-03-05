@@ -1,4 +1,4 @@
-package tas_fa18;
+package cs310.team.project;
 
 import java.sql.*;
 
@@ -58,7 +58,7 @@ import java.sql.*;
                    resultset = pstSelect.getResultSet();
                    
                    if (resultset.next()){
-                        b.setID(resultset.getString("id"));
+                        b.setId(resultset.getString("id"));
                         b.setDescription(resultset.getString("description"));
                    }
                   
@@ -94,7 +94,7 @@ import java.sql.*;
          
          boolean hasresults;
          
-         Punch p = new Punch();
+         Punch p = new Punch(); 
          
          try{
       
@@ -111,13 +111,13 @@ import java.sql.*;
                 if (hasresults){
 
                    resultset = pstSelect.getResultSet();
-                  
+                   
                    if (resultset.next()){
-                        p.setID(resultset.getInt("id"));
-                        p.setTerminalID(resultset.getString("terminalid"));
-                        p.setBadgeID(resultset.getString("badgeid"));
-                        p.setOriginalTimeStamp(resultset.getString("originaltimestamp"));
-                        p.setPunchTypeID(resultset.getString("punchtypeid"));
+                        p.setPunchId(resultset.getInt("id"));
+                        p.setTerminalId(resultset.getInt("terminalid"));
+                        p.setBadge(getBadge(resultset.getString("badgeid")) );
+                        p.printOriginalTimestamp();
+                        p.setPunchType(resultset.getInt("punchtypeid"));
                    }
                    
    
@@ -154,12 +154,20 @@ import java.sql.*;
          
          boolean hasresults;
          
-         Shift s = new Shift();
+         Shift s = null;
          
          try{
       
-            query = "SELECT * FROM shift s";
+            query = "SELECT *, HOUR(`start`) AS starthour, MINUTE(`start`) AS " 
+                    + "startminute, HOUR(`stop`) AS stophour, MINUTE(`stop`) AS "
+                    + "stopminute, HOUR (`lunchstart`) AS lunchstarthour, MINUTE"
+                    + "(`lunchstart`) AS lunchstartminute, HOUR(`lunchstop`) AS "
+                    + "lunchstophour, MINUTE (`lunchstop`) AS lunchstopminute "
+                    + "FROM shift s WHERE id = ?";
+            
             pstSelect = conn.prepareStatement(query);
+            pstSelect.setInt(1, shiftID);
+            
             System.err.println("Submitting Query ... ");
 
             hasresults = pstSelect.execute();
@@ -171,18 +179,19 @@ import java.sql.*;
                 if (hasresults){
 
                    resultset = pstSelect.getResultSet();
+                   s = new Shift();
                   
                    if(resultset.next()){
-                        s.setID(resultset.getInt("id"));
+                        s.setId(resultset.getInt("id"));
                         s.setDescription(resultset.getString("description"));
-                        s.setStartTime(resultset.getString("start"));
-                        s.setStopTime(resultset.getString("stop"));
-                        s.setInterval(resultset.getString("interval"));
-                        s.setGracePeriod(resultset.getString("graceperiod"));
-                        s.setDock(resultset.getString("dock"));
-                        s.setLunchStart(resultset.getString("lunchstart"));
-                        s.setLunchStop(resultset.getString("lunchstop"));
-                        s.setLunchDeduct(resultset.getString("lunchdeduct"));
+                        s.setShiftStart(resultset.getInt("starthour"), resultset.getInt("startminute"));
+                        s.setShiftStop(resultset.getInt("stophour"), resultset.getInt("stopminute"));
+                        s.setInterval(resultset.getInt("interval"));
+                        s.setGraceperiod(resultset.getInt("graceperiod"));
+                        s.setDock(resultset.getInt("dock"));
+                        s.setShiftLunchStart(resultset.getInt("lunchstarthour"), resultset.getInt("lunchstartminute"));
+                        s.setShiftLunchStop(resultset.getInt("lunchstophour"), resultset.getInt("lunchstopminute"));
+                        s.setLunchdeduct(resultset.getInt("lunchdeduct"));
                    
                    }
             }
