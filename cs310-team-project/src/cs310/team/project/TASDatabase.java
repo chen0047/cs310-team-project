@@ -1,6 +1,7 @@
 package cs310.team.project;
 
 import java.sql.*;
+import java.util.GregorianCalendar;
 
 
  public class TASDatabase {
@@ -43,8 +44,11 @@ import java.sql.*;
          
          try{
       
-            query = "SELECT * FROM badge b";
+            query = "SELECT * FROM badge b WHERE id=?";
+            
             pstSelect = conn.prepareStatement(query);
+            pstSelect.setString(1, badgeID);            
+            
             System.err.println("Submitting Query ... ");
 
             hasresults = pstSelect.execute();
@@ -67,7 +71,7 @@ import java.sql.*;
             hasresults = pstSelect.getMoreResults();
 
             System.out.println();
-            conn.close();
+            //conn.close();
             }
                  
             }catch (Exception e){
@@ -98,8 +102,11 @@ import java.sql.*;
          
          try{
       
-            query = "SELECT * FROM punch p";
+            query = "SELECT *, UNIX_TIMESTAMP(originaltimestamp)*1000 AS ts FROM punch p WHERE id=?";
+            
             pstSelect = conn.prepareStatement(query);
+            pstSelect.setInt(1, punchID);
+            
             System.err.println("Submitting Query ... ");
 
             hasresults = pstSelect.execute();
@@ -116,7 +123,9 @@ import java.sql.*;
                         p.setPunchId(resultset.getInt("id"));
                         p.setTerminalId(resultset.getInt("terminalid"));
                         p.setBadge(getBadge(resultset.getString("badgeid")) );
-                        p.printOriginalTimestamp();
+                        GregorianCalendar gc = new GregorianCalendar();
+                        gc.setTimeInMillis( resultset.getLong("ts") );
+                        p.setOriginalTS(gc);
                         p.setPunchType(resultset.getInt("punchtypeid"));
                    }
                    
@@ -126,7 +135,7 @@ import java.sql.*;
             hasresults = pstSelect.getMoreResults();
 
             System.out.println();
-            conn.close();
+            //conn.close();
             }
                  
             }catch (Exception e){
@@ -201,7 +210,7 @@ import java.sql.*;
 
 
             System.out.println();
-            conn.close();
+            //conn.close();
             }
                  
             }catch (Exception e){
@@ -228,9 +237,11 @@ import java.sql.*;
         Shift s = null;
         
         try{
-            String query = "SELECT * FROM employee WHERE badgeid = " + id + "";
+            String query = "SELECT * FROM employee WHERE badgeid=?";
         
             pstSelect = conn.prepareStatement(query);
+            pstSelect.setString(1, badge.getId());
+            
             System.err.println("Submitting Query ... ");
 
             hasresults = pstSelect.execute();
@@ -257,7 +268,7 @@ import java.sql.*;
 
 
             System.out.println();
-            conn.close();
+            //conn.close();
             }
                  
             }catch (Exception e){
