@@ -1,9 +1,9 @@
-package tas_sp19;
+package cs310.team.project;
 
-import tas_fa18.Shift;
-import tas_fa18.TASDatabase;
-import tas_fa18.Punch;
-import tas_fa18.Badge;
+import cs310.team.project.Shift;
+import cs310.team.project.TASDatabase;
+import cs310.team.project.Punch;
+import cs310.team.project.Badge;
 
 import org.junit.*;
 import static org.junit.Assert.*;
