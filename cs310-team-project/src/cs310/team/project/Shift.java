@@ -2,6 +2,7 @@
 package cs310.team.project;
 
 import java.time.LocalTime;
+import static java.time.temporal.ChronoUnit.MINUTES;
 
 public class Shift {
    
@@ -145,7 +146,7 @@ public class Shift {
 
     @Override
     public String toString() {
-        return " " + description + ": " + start + " - " + stop + " (" + lunchstart + lunchstop ;
+        return "" + description + ": " + start + " - " + stop + " (" + MINUTES.between(start, stop) + " minutes); Lunch: " + lunchstart + " - " + lunchstop + " (" + MINUTES.between(lunchstart, lunchstop) + " minutes)";
     }
      
 }
