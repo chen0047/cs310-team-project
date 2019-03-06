@@ -55,6 +55,7 @@ public class Shift {
         
         stop = LocalTime.of(hour, minute, 0);
         
+        
     }
     
     public int getShiftStopHour() {
