@@ -108,12 +108,12 @@ public class Punch {
 
         String Status = "";
 
-        if (eventtypeid == 1) {
+        if (punchType == 1) {
             Status = " CLOCKED IN: ";
 
         } 
 
-        else if (eventtypeid == 0) {
+        else if (punchType == 0) {
             Status = " CLOCKED OUT: ";
 
         } 
@@ -122,6 +122,6 @@ public class Punch {
             Status = " TIMED OUT: ";
         }
         String formattedTime = new SimpleDateFormat("EEE MM/dd/YYYY HH:mm:ss").format(originalTS.getTime()).toUpperCase();
-        return badge + Status + formattedTime;
+        return "#" + badge.getId() + Status + formattedTime;
     }
 }

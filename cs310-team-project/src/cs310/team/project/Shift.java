@@ -68,7 +68,7 @@ public class Shift {
     
     public void setShiftLunchStart(int hour, int minute) {
         
-        stop = LocalTime.of(hour, minute, 0);
+        lunchstart = LocalTime.of(hour, minute, 0);
         
     }
     
@@ -77,21 +77,21 @@ public class Shift {
     }
     
     public int getShiftLunchStartMinute() {
-        return (stop.getMinute());
+        return (lunchstart.getMinute());
     }
     
     public void setShiftLunchStop(int hour, int minute) {
         
-        stop = LocalTime.of(hour, minute, 0);
+        lunchstop = LocalTime.of(hour, minute, 0);
         
     }
     
     public int getShiftLunchStopHour() {
-        return (lunchstart.getHour());
+        return (lunchstop.getHour());
     }
     
     public int getShiftLunchStopMinute() {
-        return (stop.getMinute());
+        return (lunchstop.getMinute());
     }
     
 
@@ -145,7 +145,7 @@ public class Shift {
 
     @Override
     public String toString() {
-        return "Shift{" + "id=" + id + ", description=" + description + ", start=" + start + ", stop=" + stop + ", interval=" + interval + ", graceperiod=" + graceperiod + ", dock=" + dock + ", lunchstart=" + lunchstart + ", lunchstop=" + lunchstop + ", lunchdeduct=" + lunchdeduct + '}';
+        return " " + description + ": " + start + " - " + stop + " (" + lunchstart + lunchstop ;
     }
      
 }
