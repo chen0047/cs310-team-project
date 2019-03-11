@@ -16,6 +16,7 @@ public class Punch {
     private int punchType = 0;
     private GregorianCalendar originalTS;
     private GregorianCalendar adjustedTS = null;
+    private int clockIn, clockedOut = 0;
 
     
 
@@ -124,4 +125,55 @@ public class Punch {
         String formattedTime = new SimpleDateFormat("EEE MM/dd/YYYY HH:mm:ss").format(originalTS.getTime()).toUpperCase();
         return "#" + badge.getId() + Status + formattedTime;
     }
+    
+    public void adjust(Shift s)
+    {
+        adjustedTS = originalTS;
+        if(punchType == 1 && clockIn == 0)
+        {
+            if(originalTS.before(s.getStart()) && originalTS.after(s.getStart().plusMinutes(-s.getInterval())))
+            {
+                adjustedTS.set(originalTS.HOUR, s.getShiftStartHour());
+                adjustedTS.set(originalTS.MINUTE, s.getShiftStartMinute());
+                adjustedTS.set(originalTS.SECOND, 0);
+            }
+            else if(originalTS.before(s.getStart()) && originalTS.after(s.getStart().plusMinutes(s.getGraceperiod())))
+            {
+                adjustedTS.set(originalTS.HOUR, s.getShiftStartHour());
+                adjustedTS.set(originalTS.MINUTE, s.getShiftStartMinute());
+                adjustedTS.set(originalTS.SECOND, 0);
+            }
+            else if(originalTS.after(s.getStart().plusMinutes(s.getGraceperiod())))
+            {
+                adjustedTS.set(originalTS.HOUR, s.getShiftStartHour());
+                adjustedTS.set(originalTS.MINUTE, s.getShiftStartMinute());
+                adjustedTS.set(originalTS.SECOND, 0);
+            }
+            clockIn = 1;
+        }
+        else if(punchType == 1 && clockedOut == 0)
+        {
+            if(originalTS.before(s.getLunchstart()) && originalTS.after(s.getLunchstart().plusMinutes(-s.getInterval())))
+            {
+                adjustedTS.set(originalTS.HOUR, s.getShiftLunchStartHour());
+                adjustedTS.set(originalTS.MINUTE, s.getShiftLunchStartMinute());
+                adjustedTS.set(originalTS.SECOND, 0);
+            }
+            else if(originalTS.before(s.getStart()) && originalTS.after(s.getStart().plusMinutes(s.getGraceperiod())))
+            {
+                adjustedTS.set(originalTS.HOUR, s.getShiftLunchStartHour());
+                adjustedTS.set(originalTS.MINUTE, s.getShiftLunchStartMinute());
+                adjustedTS.set(originalTS.SECOND, 0);
+            }
+            else if(originalTS.after(s.getStart().plusMinutes(s.getGraceperiod())))
+            {
+                adjustedTS.set(originalTS.HOUR, s.getShiftLunchStartHour());
+                adjustedTS.set(originalTS.MINUTE, s.getShiftLunchStartMinute());
+                adjustedTS.set(originalTS.SECOND, 0);
+            }
+            clockedOut = 1;
+        }
+        
+    }
+
 }
