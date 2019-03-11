@@ -76,12 +76,12 @@ public class Punch {
         return eventtypeid;
     }
 
-    public GregorianCalendar getAdjustedTS() {
-        return adjustedTS;
+    public long getAdjustedTS() {
+        return adjustedTS.getTimeInMillis();
     }
 
-    public GregorianCalendar getOriginalTS() {
-        return originalTS;
+    public long getOriginalTS() {
+        return originalTS.getTimeInMillis();
     }
 
     public Badge getBadge() {
@@ -99,9 +99,9 @@ public class Punch {
         return shiftId;
     }
 
-    public GregorianCalendar getOriginalTimeStamp() {
+    public long getOriginalTimeStamp() {
 
-        return originalTS;
+        return originalTS.getTimeInMillis();
 
     }
     public String printOriginalTimestamp() {

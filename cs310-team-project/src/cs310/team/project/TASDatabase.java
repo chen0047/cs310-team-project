@@ -1,7 +1,9 @@
 package cs310.team.project;
 
 import java.sql.*;
+import java.text.SimpleDateFormat;
 import java.util.GregorianCalendar;
+import java.util.*;
 
 
  public class TASDatabase {
@@ -285,6 +287,82 @@ import java.util.GregorianCalendar;
          }
          return s;
         }
-}
 
 
+    public int insertPunch(Punch p){ 
+         PreparedStatement pstSelect = null, pstUpdate = null;
+         ResultSet resultset = null;
+         
+         String query;
+         int updateCount = 0;
+         int id = 0;
+         
+         int newTerminalId = p.getTerminalId();
+         int punchType = p.getPunchType();
+         String newBadgeId = p.getBadgeId();
+         long timeStamp = p.getOriginalTimeStamp();
+         
+         GregorianCalendar originalTS = new GregorianCalendar();
+         originalTS.setTimeInMillis(timeStamp);
+         
+         String formattedTS = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss").format(originalTS.getTime()).toUpperCase();
+        try{
+            
+               System.out.println("Connected Successfully!");
+
+               query = "INSERT INTO punch (terminalid, badgeid, originaltimestamp,"
+                       + " punchtypeid) VALUES (?, ?, ?, ?)";
+               
+               pstUpdate = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+               
+               pstUpdate.setInt(1,newTerminalId);
+               pstUpdate.setString(2,newBadgeId );
+               pstUpdate.setString(3,formattedTS);
+               pstUpdate.setInt(4, punchType);
+               
+               updateCount = pstUpdate.executeUpdate();
+               
+               if(updateCount > 0){
+                   
+                   resultset = pstUpdate.getGeneratedKeys();
+                   
+                   if (resultset.next()){
+                       
+                       System.out.print("Update Successful!!");
+                       id = resultset.getInt(1);
+                   }
+                   
+               }
+               
+               
+        } 
+        catch (Exception e){
+            System.err.println(e.toString());
+        }
+        
+        finally {
+            
+            if (resultset != null) { try { resultset.close(); resultset = null; } catch (Exception e) {} }
+            
+            if (pstSelect != null) { try { pstSelect.close(); pstSelect = null; } catch (Exception e) {} }
+            
+            if (pstUpdate != null) { try { pstUpdate.close(); pstUpdate = null; } catch (Exception e) {} }
+            
+        }
+        
+        
+        return id;
+ 
+    }
+
+    public ArrayList getDailyPunchList(Badge b, long ts){
+        
+        
+        
+        
+         return null;
+
+    }
+     
+
+ }
