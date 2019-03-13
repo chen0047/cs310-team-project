@@ -359,9 +359,8 @@ import java.text.SimpleDateFormat;
         ArrayList<Punch> Punches = new ArrayList<>();
         String originalTS = new SimpleDateFormat("yyyy-MM-dd");
         query = "SELECT * FROM punch WHERE badgeid = '" + b.getId() + "'" ;
-        pstSelect.execute();
         pstSelect = conn.prepareStatement(query);
-
+        pstSelect.execute();
         resultset = pstSelect.getResultSet();
         resultset.first(); //Something's going wrong somewhere around here, data not being pulled correctly.
         
