@@ -355,104 +355,42 @@ import java.text.SimpleDateFormat;
     }
 
     public ArrayList getDailyPunchList(Badge b, long ts){
+        try{
+        ArrayList<Punch> Punches = new ArrayList<>();
+        String originalTS = new SimpleDateFormat("yyyy-MM-dd");
+        query = "SELECT * FROM punch WHERE badgeid = '" + b.getId() + "'" ;
+        pstSelect = conn.prepareStatement(query);
+        pstSelect.execute();
+        resultset = pstSelect.getResultSet();
+        resultset.first(); //Something's going wrong somewhere around here, data not being pulled correctly.
         
-        PreparedStatement pstSelect = null, pstUpdate = null;
-         ResultSet resultset = null;
-         
-         String query;
-         String badgeid = b.getId();
-         ArrayList<Punch> punches = new ArrayList<>();
-        
-         
-         boolean hasresults;
-         
-         
-         GregorianCalendar start = new GregorianCalendar();
-         start.setTimeInMillis(ts);
-         start.set(Calendar.HOUR_OF_DAY, 0);
-         start.set(Calendar.MINUTE, 0);
-         start.set(Calendar.SECOND, 0);
-         
-         GregorianCalendar stop = new GregorianCalendar();
-         stop.setTimeInMillis(ts);
-         stop.set(Calendar.HOUR_OF_DAY, 23);
-         stop.set(Calendar.MINUTE, 59);
-         stop.set(Calendar.SECOND, 59);
-         
-         String startTime = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss").format(start.getTime()).toUpperCase();
-         String stopTime = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss").format(stop.getTime()).toUpperCase();
-         
-         try{
-      
-            query = "SELECT *, UNIX_TIMESTAMP(originaltimestamp)*1000 AS ts "
-                    + "FROM punch p WHERE badgeid = ? AND originaltimestamp >= ? "
-                    + "AND originaltimestamp <= ?";
-            
-            pstSelect = conn.prepareStatement(query);
-            pstSelect.setString(1, badgeid);
-            pstSelect.setString(2, startTime);
-            pstSelect.setString(3, stopTime);
-            
-            System.err.println("Submitting Query ... ");
+        while(resultset.next()){
+            String Time = resultset.getString(4);
+            if(Time.contains(originalTS)){
+                int PunchID = resultset.getInt(1);
+                int terminalID = resultset.getInt(2);
+                String badgeID = resultset.getString(3);
+                String TS = resultset.getTimestamp(4);
+                long longts = TS.getTime();
+                int punchType = resultset.getInt(5); // I THINK these are all the correct placements from queries in MYSQL, could be wrong.
+                String OriginalStamp = TS.toString();
 
-            hasresults = pstSelect.execute();
+                Punch p = new Punch(b,terminalID,punchID,badgeID,longts,punchType); //Need to update Punch class, pass the remaining data to Punch in the right order
 
-            System.err.println("Getting Results ...");
-            
-            while (hasresults || pstSelect.getUpdateCount() != -1){
-
-                if (hasresults){
-
-                   resultset = pstSelect.getResultSet();
-                   
-                   while (resultset.next()){
-                       
-                    Punch p = new Punch();
-                    
-                    
-                    p.setPunchId(resultset.getInt("id"));
-                    p.setTerminalId(resultset.getInt("terminalid"));
-                    p.setBadge(getBadge(resultset.getString("badgeid")) );
-                    GregorianCalendar gc = new GregorianCalendar();
-                    gc.setTimeInMillis( resultset.getLong("ts") );
-                    p.setOriginalTS(gc);
-                    p.setPunchType(resultset.getInt("punchtypeid"));
-                    
-                    punches.add(p);
-                   }
-                        
+                Punches.add(p);
                 }
- 
-             
-            hasresults = pstSelect.getMoreResults();
-
-            System.out.println();
-
-            }
-                 
-            }catch (Exception e){
-             System.err.println(e.toString());
-         }
-         
-         finally{
-             if(resultset != null){ try {resultset.close(); resultset = null;} catch (Exception e){}}
-             
-             if(pstSelect != null){ try {pstSelect.close(); pstSelect = null;} catch (Exception e){}}
-             
-             if(pstUpdate != null) { try {pstUpdate.close(); pstUpdate = null;} catch (Exception e){}}
-             
-         }
-         
-       
-       System.out.println("Number of Punches Found:" + punches.size());
-       for (Punch p : punches) {
-           System.out.println(p.printOriginalTimestamp());
-       }
-         return punches;
+        }
         
-     
+        
+        
+        return Punches;
+        }
+        
+        catch(Exception e){
+            System.err.println(e.toString()); // Don't know what to put here
+        }
     }
-   
+    return null;
 }
 
 
