@@ -371,7 +371,7 @@ import java.text.SimpleDateFormat;
                 int PunchID = resultset.getInt(1);
                 int terminalID = resultset.getInt(2);
                 String badgeID = resultset.getString(3);
-                Timestamp TS = resultset.getTimestamp(4);
+                String TS = resultset.getTimestamp(4);
                 long longts = TS.getTime();
                 int punchType = resultset.getInt(5); // I THINK these are all the correct placements from queries in MYSQL, could be wrong.
                 String OriginalStamp = TS.toString();
