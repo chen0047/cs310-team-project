@@ -11,11 +11,11 @@ public class Punch {
     private String BadgeId;
     private int terminalId;
     private int punchId;
-    private int eventtypeid = 0;
-    private int shiftId = 0;
-    private int punchType = 0;
+    private int eventtypeid;
+    private int shiftId;
+    private int punchType;
     private GregorianCalendar originalTS;
-    private GregorianCalendar adjustedTS = null;
+    private GregorianCalendar adjustedTS;
 
     
 
@@ -76,12 +76,12 @@ public class Punch {
         return eventtypeid;
     }
 
-    public GregorianCalendar getAdjustedTS() {
-        return adjustedTS;
+    public long getAdjustedTS() {
+        return adjustedTS.getTimeInMillis();
     }
 
-    public GregorianCalendar getOriginalTS() {
-        return originalTS;
+    public long getOriginalTS() {
+        return originalTS.getTimeInMillis();
     }
 
     public Badge getBadge() {
@@ -99,21 +99,21 @@ public class Punch {
         return shiftId;
     }
 
-    public GregorianCalendar getOriginalTimeStamp() {
+    public long getOriginalTimeStamp() {
 
-        return originalTS;
+        return originalTS.getTimeInMillis();
 
     }
     public String printOriginalTimestamp() {
 
         String Status = "";
 
-        if (eventtypeid == 1) {
+        if (punchType == 1) {
             Status = " CLOCKED IN: ";
 
         } 
 
-        else if (eventtypeid == 0) {
+        else if (punchType == 0) {
             Status = " CLOCKED OUT: ";
 
         } 
@@ -122,6 +122,6 @@ public class Punch {
             Status = " TIMED OUT: ";
         }
         String formattedTime = new SimpleDateFormat("EEE MM/dd/YYYY HH:mm:ss").format(originalTS.getTime()).toUpperCase();
-        return badge + Status + formattedTime;
+        return "#" + badge.getId() + Status + formattedTime;
     }
 }

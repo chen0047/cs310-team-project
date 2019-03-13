@@ -1,6 +1,9 @@
 package cs310.team.project;
 
 import java.sql.*;
+import java.text.SimpleDateFormat;
+import java.util.GregorianCalendar;
+import java.util.*;
 
 
  public class TASDatabase {
@@ -43,8 +46,11 @@ import java.sql.*;
          
          try{
       
-            query = "SELECT * FROM badge b";
+            query = "SELECT * FROM badge b WHERE id=?";
+            
             pstSelect = conn.prepareStatement(query);
+            pstSelect.setString(1, badgeID);            
+            
             System.err.println("Submitting Query ... ");
 
             hasresults = pstSelect.execute();
@@ -67,7 +73,7 @@ import java.sql.*;
             hasresults = pstSelect.getMoreResults();
 
             System.out.println();
-            conn.close();
+            //conn.close();
             }
                  
             }catch (Exception e){
@@ -98,8 +104,11 @@ import java.sql.*;
          
          try{
       
-            query = "SELECT * FROM punch p";
+            query = "SELECT *, UNIX_TIMESTAMP(originaltimestamp)*1000 AS ts FROM punch p WHERE id=?";
+            
             pstSelect = conn.prepareStatement(query);
+            pstSelect.setInt(1, punchID);
+            
             System.err.println("Submitting Query ... ");
 
             hasresults = pstSelect.execute();
@@ -116,7 +125,9 @@ import java.sql.*;
                         p.setPunchId(resultset.getInt("id"));
                         p.setTerminalId(resultset.getInt("terminalid"));
                         p.setBadge(getBadge(resultset.getString("badgeid")) );
-                        p.printOriginalTimestamp();
+                        GregorianCalendar gc = new GregorianCalendar();
+                        gc.setTimeInMillis( resultset.getLong("ts") );
+                        p.setOriginalTS(gc);
                         p.setPunchType(resultset.getInt("punchtypeid"));
                    }
                    
@@ -126,7 +137,7 @@ import java.sql.*;
             hasresults = pstSelect.getMoreResults();
 
             System.out.println();
-            conn.close();
+            //conn.close();
             }
                  
             }catch (Exception e){
@@ -201,7 +212,7 @@ import java.sql.*;
 
 
             System.out.println();
-            conn.close();
+            //conn.close();
             }
                  
             }catch (Exception e){
@@ -228,9 +239,11 @@ import java.sql.*;
         Shift s = null;
         
         try{
-            String query = "SELECT * FROM employee WHERE badgeid = " + id + "";
+            String query = "SELECT * FROM employee WHERE badgeid=?";
         
             pstSelect = conn.prepareStatement(query);
+            pstSelect.setString(1, badge.getId());
+            
             System.err.println("Submitting Query ... ");
 
             hasresults = pstSelect.execute();
@@ -257,7 +270,7 @@ import java.sql.*;
 
 
             System.out.println();
-            conn.close();
+            //conn.close();
             }
                  
             }catch (Exception e){
@@ -274,6 +287,109 @@ import java.sql.*;
          }
          return s;
         }
+
+
+    public int insertPunch(Punch p){ 
+         PreparedStatement pstSelect = null, pstUpdate = null;
+         ResultSet resultset = null;
+         
+         String query;
+         int updateCount = 0;
+         int id = 0;
+         
+         int newTerminalId = p.getTerminalId();
+         int punchType = p.getPunchType();
+         String newBadgeId = p.getBadgeId();
+         long timeStamp = p.getOriginalTimeStamp();
+         
+         GregorianCalendar originalTS = new GregorianCalendar();
+         originalTS.setTimeInMillis(timeStamp);
+         
+         String formattedTS = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss").format(originalTS.getTime()).toUpperCase();
+        try{
+            
+               System.out.println("Connected Successfully!");
+
+               query = "INSERT INTO punch (terminalid, badgeid, originaltimestamp,"
+                       + " punchtypeid) VALUES (?, ?, ?, ?)";
+               
+               pstUpdate = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+               
+               pstUpdate.setInt(1,newTerminalId);
+               pstUpdate.setString(2,newBadgeId );
+               pstUpdate.setString(3,formattedTS);
+               pstUpdate.setInt(4, punchType);
+               
+               updateCount = pstUpdate.executeUpdate();
+               
+               if(updateCount > 0){
+                   
+                   resultset = pstUpdate.getGeneratedKeys();
+                   
+                   if (resultset.next()){
+                       
+                       System.out.print("Update Successful!!");
+                       id = resultset.getInt(1);
+                   }
+                   
+               }
+               
+               
+        } 
+        catch (Exception e){
+            System.err.println(e.toString());
+        }
+        
+        finally {
+            
+            if (resultset != null) { try { resultset.close(); resultset = null; } catch (Exception e) {} }
+            
+            if (pstSelect != null) { try { pstSelect.close(); pstSelect = null; } catch (Exception e) {} }
+            
+            if (pstUpdate != null) { try { pstUpdate.close(); pstUpdate = null; } catch (Exception e) {} }
+            
+        }
+        
+        
+        return id;
+ 
+    }
+
+    public ArrayList getDailyPunchList(Badge b, long ts){
+        try{
+        ArrayList<Punch> Punches = new ArrayList<>();
+        String originalTS = new SimpleDateFormat("yyyy-MM-dd");
+        query = "SELECT * FROM punch WHERE badgeid = '" + b.getId() + "'" ;
+        pstSelect = conn.prepareStatement(query);
+        resultset = pstSelect.getResultSet();
+        resultset.first(); //Something's going wrong somewhere around here, data not being pulled correctly.
+        
+        while(resultset.next()){
+            String Time = resultset.getString(4);
+            if(Time.contains(originalTS)){
+                int PunchID = resultset.getInt(1);
+                int terminalID = resultset.getInt(2);
+                String badgeID = resultset.getString(3);
+                Timestamp TS = resultset.getTimestamp(4);
+                long longts = TS.getTime();
+                int punchType = resultset.getInt(5); // I THINK these are all the correct placements from queries in MYSQL, could be wrong.
+                String OriginalStamp = TS.toString();
+
+                Punch p = new Punch(b); //Need to update Punch class, pass the remaining data to Punch in the right order
+
+                punches.add(p);
+                }
+        }
+        
+        
+        
+        return punches;
+        }
+        
+        catch(Exception e){
+            System.err.println(); // Don't know what to put here
+        }
+    }
 }
 
 
