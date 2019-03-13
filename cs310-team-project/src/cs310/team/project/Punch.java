@@ -16,16 +16,26 @@ public class Punch {
     private int punchType;
     private GregorianCalendar originalTS;
     private GregorianCalendar adjustedTS;
-
+    private long Timestamp;
     
 
-    public Punch(Badge badge, int terminalId,int punchTypeId) {
+    public Punch(Badge badge, int terminalId,int punchId) {
 
     originalTS = new GregorianCalendar();
     this.terminalId = terminalId;
     this.badge = badge;
-    this.punchId = punchTypeId;
+    this.punchId = punchId;
     
+    }
+    public Punch(Badge badge, int terminalId, int punchId, String BadgeId, long Timestamp, int punchType) {
+
+    originalTS = new GregorianCalendar();
+    this.badge = badge;
+    this.terminalId = terminalId;
+    this.punchId = punchId;
+    this.BadgeId = BadgeId;
+    this.Timestamp = Timestamp;
+    this.punchType = punchType;
     }
 
     public void setBadge(Badge badge) {

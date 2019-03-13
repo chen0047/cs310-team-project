@@ -2,7 +2,8 @@ package cs310.team.project;
 
 import java.sql.*;
 import java.util.GregorianCalendar;
-
+import java.util.*;
+import java.text.SimpleDateFormat;
 
  public class TASDatabase {
      
@@ -358,7 +359,9 @@ import java.util.GregorianCalendar;
         ArrayList<Punch> Punches = new ArrayList<>();
         String originalTS = new SimpleDateFormat("yyyy-MM-dd");
         query = "SELECT * FROM punch WHERE badgeid = '" + b.getId() + "'" ;
+        pstSelect.execute();
         pstSelect = conn.prepareStatement(query);
+
         resultset = pstSelect.getResultSet();
         resultset.first(); //Something's going wrong somewhere around here, data not being pulled correctly.
         
@@ -373,21 +376,22 @@ import java.util.GregorianCalendar;
                 int punchType = resultset.getInt(5); // I THINK these are all the correct placements from queries in MYSQL, could be wrong.
                 String OriginalStamp = TS.toString();
 
-                Punch p = new Punch(b); //Need to update Punch class, pass the remaining data to Punch in the right order
+                Punch p = new Punch(b,terminalID,punchID,badgeID,longts,punchType); //Need to update Punch class, pass the remaining data to Punch in the right order
 
-                punches.add(p);
+                Punches.add(p);
                 }
         }
         
         
         
-        return punches;
+        return Punches;
         }
         
         catch(Exception e){
-            System.err.println(); // Don't know what to put here
+            System.err.println(e.toString()); // Don't know what to put here
         }
     }
+    return null;
 }
 
 
