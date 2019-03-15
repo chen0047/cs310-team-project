@@ -14,27 +14,26 @@ public class Punch {
     private int eventtypeid;
     private int shiftId;
     private int punchType;
-    private GregorianCalendar originalTS;
-    private GregorianCalendar adjustedTS;
-    private long Timestamp;
+    private long originalTS;
+    private long adjustedTS;
     
 
     public Punch(Badge badge, int terminalId,int punchId) {
 
-    originalTS = new GregorianCalendar();
+    Gregoriancalendar Timestamp = new GregorianCalendar();
     this.terminalId = terminalId;
     this.badge = badge;
     this.punchId = punchId;
     
     }
-    public Punch(Badge badge, int terminalId, int punchId, String BadgeId, long Timestamp, int punchType) {
+    public Punch(Badge badge, int terminalId, int punchId, String BadgeId, long originalTS, int punchType) {
 
-    originalTS = new GregorianCalendar();
+    Gregoriancalendar Timestamp = new GregorianCalendar();
     this.badge = badge;
     this.terminalId = terminalId;
     this.punchId = punchId;
     this.BadgeId = BadgeId;
-    this.Timestamp = Timestamp;
+    this.originalTS = originalTS;
     this.punchType = punchType;
     }
 
@@ -63,11 +62,11 @@ public class Punch {
     }
 
 
-    public void setOriginalTS(GregorianCalendar originalTS) {
+    public void setOriginalTS(long originalTS) {
         this.originalTS = originalTS;
     }
 
-    public void setAdjustedTS(GregorianCalendar adjustedTS) {
+    public void setAdjustedTS(long adjustedTS) {
         this.adjustedTS = adjustedTS;
     }
 
