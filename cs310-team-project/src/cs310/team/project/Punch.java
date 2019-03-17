@@ -2,6 +2,7 @@ package cs310.team.project;
 
 import java.util.*;
 import java.text.SimpleDateFormat;
+import java.time.LocalTime;
 
 public class Punch {
 
@@ -129,30 +130,31 @@ public class Punch {
     
     public void adjust(Shift s)
     {
-        adjustedTS = originalTS;
+        adjustedTS = (GregorianCalendar) originalTS.clone();
+        LocalTime time = LocalTime.of(originalTS.HOUR, originalTS.MINUTE, 0);
         
         
         if(punchType == 1 && clockedIn == 0)
         {
-            if(originalTS.before(s.getStart()) && originalTS.after(s.getStart().plusMinutes(-s.getInterval())))
+            if(time.isBefore(s.getStart()))
             {
-                adjustedTS.set(originalTS.HOUR, s.getShiftStartHour());
-                adjustedTS.set(originalTS.MINUTE, s.getShiftStartMinute());
-                adjustedTS.set(originalTS.SECOND, 0);
-                trigger = "(Interval Round)";
-            }
-            else if(originalTS.before(s.getStart()) && originalTS.after(s.getStart().plusMinutes(s.getGraceperiod())))
-            {
-                adjustedTS.set(originalTS.HOUR, s.getShiftStartHour());
-                adjustedTS.set(originalTS.MINUTE, s.getShiftStartMinute());
-                adjustedTS.set(originalTS.SECOND, 0);
+                adjustedTS.set(adjustedTS.HOUR, s.getShiftStartHour());
+                adjustedTS.set(adjustedTS.MINUTE, s.getShiftStartMinute());
+                adjustedTS.set(adjustedTS.SECOND, 0);
                 trigger = "(Shift Start)";
             }
-            else if(originalTS.after(s.getStart().plusMinutes(s.getGraceperiod())))
+            else if(time.isAfter(s.getStart()) && (time.isBefore(s.getStart().plusMinutes(s.getGraceperiod())) || time.equals(s.getStart().plusMinutes(s.getGraceperiod()))))
             {
-                adjustedTS.set(originalTS.HOUR, s.getShiftStartHour());
-                adjustedTS.set(originalTS.MINUTE, s.getShiftStartMinute());
-                adjustedTS.set(originalTS.SECOND, 0);
+                adjustedTS.set(adjustedTS.HOUR, s.getShiftStartHour());
+                adjustedTS.set(adjustedTS.MINUTE, s.getShiftStartMinute());
+                adjustedTS.set(adjustedTS.SECOND, 0);
+                trigger = "(Shift Start)";
+            }
+            else if(time.isAfter(s.getStart().plusMinutes(s.getGraceperiod())))
+            {
+                adjustedTS.set(adjustedTS.HOUR, s.getShiftStartHour());
+                adjustedTS.set(adjustedTS.MINUTE, s.getShiftStartMinute() + s.getDock());
+                adjustedTS.set(adjustedTS.SECOND, 0);
                 trigger = "(Shift Dock)";
             }
             clockedIn = 1;
@@ -160,71 +162,71 @@ public class Punch {
         
         else if(punchType == 0 && clockedOut == 0)
         {
-            if(originalTS.before(s.getLunchstart()) && originalTS.after(s.getLunchstart().plusMinutes(-s.getInterval())))
+            if(time.isBefore(s.getLunchstart()))
             {
-                adjustedTS.set(originalTS.HOUR, s.getShiftLunchStartHour());
-                adjustedTS.set(originalTS.MINUTE, s.getShiftLunchStartMinute());
-                adjustedTS.set(originalTS.SECOND, 0);
+                adjustedTS.set(adjustedTS.HOUR, s.getShiftLunchStartHour());
+                adjustedTS.set(adjustedTS.MINUTE, s.getShiftLunchStartMinute());
+                adjustedTS.set(adjustedTS.SECOND, 0);
                 trigger = "(Interval Round)";
             }
-            else if(originalTS.before(s.getLunchstart()) && originalTS.after(s.getLunchstart().plusMinutes(s.getGraceperiod())))
+            else if(time.isAfter(s.getLunchstart()) && (time.isBefore(s.getLunchstart().plusMinutes(s.getGraceperiod())) || time.equals(s.getLunchstart().plusMinutes(s.getGraceperiod()))))
             {
-                adjustedTS.set(originalTS.HOUR, s.getShiftLunchStartHour());
-                adjustedTS.set(originalTS.MINUTE, s.getShiftLunchStartMinute());
-                adjustedTS.set(originalTS.SECOND, 0);
+                adjustedTS.set(adjustedTS.HOUR, s.getShiftLunchStartHour());
+                adjustedTS.set(adjustedTS.MINUTE, s.getShiftLunchStartMinute());
+                adjustedTS.set(adjustedTS.SECOND, 0);
             }
-            else if(originalTS.after(s.getLunchstart().plusMinutes(s.getGraceperiod())))
+            else if(time.isAfter(s.getLunchstart().plusMinutes(s.getGraceperiod())))
             {
-                adjustedTS.set(originalTS.HOUR, s.getShiftLunchStartHour());
-                adjustedTS.set(originalTS.MINUTE, s.getShiftLunchStartMinute());
-                adjustedTS.set(originalTS.SECOND, 0);
+                adjustedTS.set(adjustedTS.HOUR, s.getShiftLunchStartHour());
+                adjustedTS.set(adjustedTS.MINUTE, s.getShiftLunchStartMinute());
+                adjustedTS.set(adjustedTS.SECOND, 0);
             }
             clockedOut = 1;
         }
         
         else if(punchType == 1 && clockedIn == 1)
         {
-            if(originalTS.before(s.getLunchstop()) && originalTS.after(s.getLunchstop().plusMinutes(-s.getInterval())))
+            if(time.isBefore(s.getLunchstop()))
             {
-                adjustedTS.set(originalTS.HOUR, s.getShiftLunchStopHour());
-                adjustedTS.set(originalTS.MINUTE, s.getShiftLunchStopMinute());
-                adjustedTS.set(originalTS.SECOND, 0);
+                adjustedTS.set(adjustedTS.HOUR, s.getShiftLunchStopHour());
+                adjustedTS.set(adjustedTS.MINUTE, s.getShiftLunchStopMinute());
+                adjustedTS.set(adjustedTS.SECOND, 0);
                 trigger = "(Interval Round)";
             }
-            else if(originalTS.after(s.getLunchstop()) && originalTS.before(s.getLunchstop().plusMinutes(s.getGraceperiod())))
+            else if(time.isAfter(s.getLunchstop()) && (time.isBefore(s.getLunchstop().plusMinutes(s.getGraceperiod())) || time.equals(s.getLunchstop().plusMinutes(s.getGraceperiod()))))
             {
-                adjustedTS.set(originalTS.HOUR, s.getShiftLunchStopHour());
-                adjustedTS.set(originalTS.MINUTE, s.getShiftLunchStopMinute());
-                adjustedTS.set(originalTS.SECOND, 0);
+                adjustedTS.set(adjustedTS.HOUR, s.getShiftLunchStopHour());
+                adjustedTS.set(adjustedTS.MINUTE, s.getShiftLunchStopMinute());
+                adjustedTS.set(adjustedTS.SECOND, 0);
             }
-            else if(originalTS.after(s.getLunchstop().plusMinutes(s.getGraceperiod())) && originalTS.before(s.getLunchstop().plusMinutes(s.getInterval())))
+            else if(time.isAfter(s.getLunchstop().plusMinutes(s.getGraceperiod())))
             {
-                adjustedTS.set(originalTS.HOUR, s.getShiftLunchStopHour());
-                adjustedTS.set(originalTS.MINUTE, s.getShiftLunchStopMinute() + s.getDock());
-                adjustedTS.set(originalTS.SECOND, 0);
+                adjustedTS.set(adjustedTS.HOUR, s.getShiftLunchStopHour());
+                adjustedTS.set(adjustedTS.MINUTE, s.getShiftLunchStopMinute());
+                adjustedTS.set(adjustedTS.SECOND, 0);
             }
             clockedIn = 0;
         }
         
         else if(punchType == 0 && clockedOut == 1)
         {
-            if(originalTS.before(s.getStop()) && originalTS.after(s.getStop().plusMinutes(s.getInterval())))
+            if(time.isAfter(s.getStop()))
             {
-                adjustedTS.set(originalTS.HOUR, s.getShiftStopHour());
-                adjustedTS.set(originalTS.MINUTE, s.getShiftStopMinute());
-                adjustedTS.set(originalTS.SECOND, 0);
+                adjustedTS.set(adjustedTS.HOUR, s.getShiftStopHour());
+                adjustedTS.set(adjustedTS.MINUTE, s.getShiftStopMinute());
+                adjustedTS.set(adjustedTS.SECOND, 0);
             }
-            else if(originalTS.after(s.getStop()) && originalTS.before(s.getStop().plusMinutes(-s.getGraceperiod())))
+            else if(time.isBefore(s.getStop()) && (time.isAfter(s.getStop().minusMinutes(s.getGraceperiod())) || time.equals(s.getStop().minusMinutes(s.getGraceperiod()))))
             {
-                adjustedTS.set(originalTS.HOUR, s.getShiftStopHour());
-                adjustedTS.set(originalTS.MINUTE, s.getShiftStopMinute());
-                adjustedTS.set(originalTS.SECOND, 0);
+                adjustedTS.set(adjustedTS.HOUR, s.getShiftStopHour());
+                adjustedTS.set(adjustedTS.MINUTE, s.getShiftStopMinute());
+                adjustedTS.set(adjustedTS.SECOND, 0);
             }
-            else if(originalTS.after(s.getLunchstop().plusMinutes(s.getGraceperiod())) && originalTS.before(s.getLunchstop().plusMinutes(s.getInterval())))
+            else if(time.isBefore(s.getStop().minusMinutes(s.getGraceperiod())))
             {
-                adjustedTS.set(originalTS.HOUR, s.getShiftStopHour());
-                adjustedTS.set(originalTS.MINUTE, s.getShiftStopMinute() - s.getDock());
-                adjustedTS.set(originalTS.SECOND, 0);
+                adjustedTS.set(adjustedTS.HOUR, s.getShiftStopHour());
+                adjustedTS.set(adjustedTS.MINUTE, s.getShiftStopMinute());
+                adjustedTS.set(adjustedTS.SECOND, 0);
             }
             clockedOut = 0;
         }
@@ -248,7 +250,7 @@ public class Punch {
             Status = " TIMED OUT: ";
         }
         String formattedTime = new SimpleDateFormat("EEE MM/dd/YYYY HH:mm:ss").format(adjustedTS.getTime()).toUpperCase();
-        return "#" + badge.getId() + Status + formattedTime;
+        return "#" + badge.getId() + Status + formattedTime + " " + trigger;
     }
 
 }
