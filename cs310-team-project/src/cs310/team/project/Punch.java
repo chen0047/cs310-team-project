@@ -16,15 +16,12 @@ public class Punch {
     private int shiftId;
     private int punchType;
     private GregorianCalendar originalTS;
-<<<<<<< HEAD
+
     private GregorianCalendar adjustedTS;
     private long Timestamp;
-=======
-    private GregorianCalendar adjustedTS = null;
+
     private String trigger = "";
 
->>>>>>> origin/Feature_3
-    
 
     public Punch(Badge badge, int terminalId,int punchId) {
 
