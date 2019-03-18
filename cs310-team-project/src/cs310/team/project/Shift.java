@@ -31,6 +31,22 @@ public class Shift {
        lunchstop = LocalTime.now();
  
     }
+
+    public LocalTime getStart() {
+        return start;
+    }
+
+    public LocalTime getStop() {
+        return stop;
+    }
+
+    public LocalTime getLunchstart() {
+        return lunchstart;
+    }
+
+    public LocalTime getLunchstop() {
+        return lunchstop;
+    }
     
     public void setShiftStart(int hour, int minute) {
         
