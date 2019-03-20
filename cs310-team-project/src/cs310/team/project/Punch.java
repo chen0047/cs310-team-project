@@ -6,10 +6,11 @@ import java.time.LocalTime;
 
 public class Punch {
 
-    public Punch(){}
+    public Punch(){
+        originalTS = new GregorianCalendar();
+    }
     
-    private Badge badge;
-    private String BadgeId;
+    private Badge badge;    
     private int terminalId;
     private int punchId;
     private int eventtypeid;
@@ -37,7 +38,7 @@ public class Punch {
     this.badge = badge;
     this.terminalId = terminalId;
     this.punchId = punchId;
-    this.BadgeId = BadgeId;
+    
     this.Timestamp = Timestamp;
     this.punchType = punchType;
     }
@@ -68,11 +69,11 @@ public class Punch {
 
 
     public void setOriginalTS(GregorianCalendar originalTS) {
-        this.originalTS = originalTS;
+        this.originalTS.setTimeInMillis(originalTS.getTimeInMillis());
     }
 
     public void setAdjustedTS(GregorianCalendar adjustedTS) {
-        this.adjustedTS = adjustedTS;
+        this.adjustedTS.setTimeInMillis(adjustedTS.getTimeInMillis());
     }
 
     public int getPunchId() {
@@ -80,7 +81,7 @@ public class Punch {
     }
     
     public String getBadgeId() {
-        return BadgeId;
+        return badge.getId();
     }
     
     public int getPunchType() {
@@ -102,7 +103,7 @@ public class Punch {
 
         return badge;
     }
-
+    
     public int getTerminalId() {
 
         return terminalId;
@@ -117,6 +118,11 @@ public class Punch {
 
         return originalTS.getTimeInMillis();
 
+    }
+    
+    public String getTrigger(){
+    
+        return this.trigger;
     }
     public String printOriginalTimestamp() {
 
@@ -156,28 +162,28 @@ public class Punch {
                     adjustedTS.set(adjustedTS.HOUR_OF_DAY, s.getShiftStartHour());
                     adjustedTS.set(adjustedTS.MINUTE, s.getShiftStartMinute());
                     adjustedTS.set(adjustedTS.SECOND, 0);
-                    trigger = "(Shift Start)";
+                    trigger = "Shift Start";
                 }
                 else if(time.isBefore(s.getLunchstop()) && time.isAfter(s.getLunchstart()))
                 {
                     adjustedTS.set(adjustedTS.HOUR_OF_DAY, s.getShiftLunchStopHour());
                     adjustedTS.set(adjustedTS.MINUTE, s.getShiftLunchStopMinute());
                     adjustedTS.set(adjustedTS.SECOND, 0);
-                    trigger = "(Lunch Stop)";   
+                    trigger = "Lunch Stop";   
                 }
                 else if(time.isAfter(s.getStart()) && (time.isBefore(s.getStart().plusMinutes(s.getGraceperiod())) || time.equals(s.getStart().plusMinutes(s.getGraceperiod()))))
                 {
                     adjustedTS.set(adjustedTS.HOUR_OF_DAY, s.getShiftStartHour());
                     adjustedTS.set(adjustedTS.MINUTE, s.getShiftStartMinute());
                     adjustedTS.set(adjustedTS.SECOND, 0);
-                    trigger = "(Shift Start)";
+                    trigger = "Shift Start";
                 }
                 else if(time.isAfter(s.getStart().plusMinutes(s.getGraceperiod())) && (time.isBefore(s.getStart().plusMinutes(s.getDock())) || time.equals(s.getStart().plusMinutes(s.getDock()))))
                 {
                     adjustedTS.set(adjustedTS.HOUR_OF_DAY, s.getShiftStartHour());
                     adjustedTS.set(adjustedTS.MINUTE, s.getShiftStartMinute() + s.getDock());
                     adjustedTS.set(adjustedTS.SECOND, 0);
-                    trigger = "(Shift Dock)";
+                    trigger = "Shift Dock";
                 }
                 else
                 {
@@ -185,12 +191,12 @@ public class Punch {
                     {  
                         adjustedTS.add(Calendar.MINUTE, 15 - unroundedMinutes);
                         adjustedTS.set(adjustedTS.SECOND, 0);
-                        trigger = "(Interval Round)";
+                        trigger = "Interval Round";
                     }
                     else
                     {
                         adjustedTS.set(adjustedTS.SECOND, 0);
-                        trigger = "(None)"; 
+                        trigger = "None"; 
                     }
                 }
             }
@@ -201,28 +207,28 @@ public class Punch {
                     adjustedTS.set(adjustedTS.HOUR_OF_DAY, s.getShiftStopHour());
                     adjustedTS.set(adjustedTS.MINUTE, s.getShiftStopMinute());
                     adjustedTS.set(adjustedTS.SECOND, 0);
-                    trigger = "(Shift Stop)";
+                    trigger = "Shift Stop";
                 }
                 else if(time.isBefore(s.getLunchstop()) && time.isAfter(s.getLunchstart()))
                 {
                     adjustedTS.set(adjustedTS.HOUR_OF_DAY, s.getShiftLunchStartHour());
                     adjustedTS.set(adjustedTS.MINUTE, s.getShiftLunchStartMinute());
                     adjustedTS.set(adjustedTS.SECOND, 0);
-                    trigger = "(Lunch Start)";  
+                    trigger = "Lunch Start";  
                 }
                 else if(time.isBefore(s.getStop()) && (time.isAfter(s.getStop().minusMinutes(s.getGraceperiod())) || time.equals(s.getStop().minusMinutes(s.getGraceperiod()))))
                 {
                     adjustedTS.set(adjustedTS.HOUR_OF_DAY, s.getShiftStopHour());
                     adjustedTS.set(adjustedTS.MINUTE, s.getShiftStopMinute());
                     adjustedTS.set(adjustedTS.SECOND, 0);
-                    trigger = "(Shift Stop)";
+                    trigger = "Shift Stop";
                 }
                 else if(time.isBefore(s.getStop().minusMinutes(s.getGraceperiod())) && (time.isAfter(s.getStop().minusMinutes(s.getDock())) || time.equals(s.getStop().minusMinutes(s.getDock()))))
                 {
                     adjustedTS.set(adjustedTS.HOUR_OF_DAY, s.getShiftStopHour());
                     adjustedTS.set(adjustedTS.MINUTE, s.getShiftStopMinute() - s.getDock());
                     adjustedTS.set(adjustedTS.SECOND, 0);
-                    trigger = "(Shift Dock)";
+                    trigger = "Shift Dock";
                 }
                 else
                 {
@@ -230,12 +236,12 @@ public class Punch {
                     {  
                         adjustedTS.add(Calendar.MINUTE, 15 - unroundedMinutes);
                         adjustedTS.set(adjustedTS.SECOND, 0);
-                        trigger = "(Interval Round)";
+                        trigger = "Interval Round";
                     }
                     else
                     {
                         adjustedTS.set(adjustedTS.SECOND, 0);
-                        trigger = "(None)"; 
+                        trigger = "None"; 
                     }
                 }
             }
@@ -244,7 +250,7 @@ public class Punch {
         {
             adjustedTS.add(Calendar.MINUTE, mod < 8 ? -mod : (15-mod));
             adjustedTS.set(adjustedTS.SECOND, 0);
-            trigger = "(Interval Round)";
+            trigger = "Interval Round";
         }
     }
     
@@ -266,7 +272,7 @@ public class Punch {
             Status = " TIMED OUT: ";
         }
         String formattedTime = new SimpleDateFormat("EEE MM/dd/YYYY HH:mm:ss").format(adjustedTS.getTime()).toUpperCase();
-        return "#" + badge.getId() + Status + formattedTime + " " + trigger;
+        return "#" + badge.getId() + Status + formattedTime + " " + "("+ trigger + ")";
     }
 
 }

@@ -382,6 +382,8 @@ import java.text.SimpleDateFormat;
          String startTime = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss").format(start.getTime()).toUpperCase();
          String stopTime = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss").format(stop.getTime()).toUpperCase();
          
+         System.out.println("Badge ID: " + badgeid + "; Start Time: " + startTime + "; Stop Time: " + stopTime);
+         
          try{
       
             query = "SELECT *, UNIX_TIMESTAMP(originaltimestamp)*1000 AS ts "
