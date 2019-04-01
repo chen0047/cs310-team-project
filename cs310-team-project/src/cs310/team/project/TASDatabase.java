@@ -454,6 +454,233 @@ import java.text.SimpleDateFormat;
         
      
     }
+    
+    public ArrayList getPayPeriodPunchList(Badge b, long ts){
+         
+        PreparedStatement pstSelect = null, pstUpdate = null;
+         ResultSet resultset = null;
+         
+         String query;
+         String badgeid = b.getId();
+         ArrayList<Punch> punches = new ArrayList<>();
+        
+         
+         boolean hasresults;
+         
+         
+         GregorianCalendar start = new GregorianCalendar();
+         start.setTimeInMillis(ts);
+         start.set(Calendar.DAY_OF_WEEK,7);
+         start.set(Calendar.HOUR_OF_DAY, 0);
+         start.set(Calendar.MINUTE, 0);
+         start.set(Calendar.SECOND, 0);
+         
+         GregorianCalendar stop = new GregorianCalendar();
+         stop.setTimeInMillis(ts);
+         stop.set(Calendar.DAY_OF_WEEK, 6);
+         stop.set(Calendar.HOUR_OF_DAY, 23);
+         stop.set(Calendar.MINUTE, 59);
+         stop.set(Calendar.SECOND, 59);
+         
+         String startTime = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss").format(start.getTime()).toUpperCase();
+         String stopTime = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss").format(stop.getTime()).toUpperCase();
+         
+         System.out.println("Badge ID: " + badgeid + "; Start Time: " + startTime + "; Stop Time: " + stopTime);
+         
+         try{
+      
+            query = "SELECT *, UNIX_TIMESTAMP(originaltimestamp)*1000 AS ts "
+                    + "FROM punch p WHERE badgeid = ? AND originaltimestamp >= ? "
+                    + "AND originaltimestamp <= ?";
+            
+            pstSelect = conn.prepareStatement(query);
+            pstSelect.setString(1, badgeid);
+            pstSelect.setString(2, startTime);
+            pstSelect.setString(3, stopTime);
+            
+            System.err.println("Submitting Query ... ");
+
+            hasresults = pstSelect.execute();
+
+            System.err.println("Getting Results ...");
+            
+            while (hasresults || pstSelect.getUpdateCount() != -1){
+
+                if (hasresults){
+
+                   resultset = pstSelect.getResultSet();
+                   
+                   while (resultset.next()){
+                       
+                    Punch p = new Punch();
+                    
+                    
+                    p.setPunchId(resultset.getInt("id"));
+                    p.setTerminalId(resultset.getInt("terminalid"));
+                    p.setBadge(getBadge(resultset.getString("badgeid")) );
+                    GregorianCalendar gc = new GregorianCalendar();
+                    gc.setTimeInMillis( resultset.getLong("ts") );
+                    p.setOriginalTS(gc);
+                    p.setPunchType(resultset.getInt("punchtypeid"));
+                    
+                    punches.add(p);
+                   }
+                        
+                }
+ 
+             
+            hasresults = pstSelect.getMoreResults();
+
+            System.out.println();
+
+            }
+                 
+            }catch (Exception e){
+             System.err.println(e.toString());
+         }
+         
+         finally{
+             if(resultset != null){ try {resultset.close(); resultset = null;} catch (Exception e){}}
+             
+             if(pstSelect != null){ try {pstSelect.close(); pstSelect = null;} catch (Exception e){}}
+             
+             if(pstUpdate != null) { try {pstUpdate.close(); pstUpdate = null;} catch (Exception e){}}
+             
+         }
+       
+         return punches;
+    
+    }
+    
+    public Absenteeism getAbsenteeism(String id, long ts){
+        
+        PreparedStatement pstSelect = null, pstUpdate = null;
+        ResultSet resultset = null;
+        
+        String query;
+        
+        boolean hasresults;
+        
+        Absenteeism a = null;
+        
+        try{
+            
+            query = "SELECT *, UNIX_TIMESTAMP(payperiod)*1000 AS ts "
+                    + "FROM absenteeism WHERE badgeid=? HAVING ts = ?";  //needed helps
+            
+            pstSelect = conn.prepareStatement(query);
+            pstSelect.setString(1, id);
+            pstSelect.setLong(2, ts);
+            
+            System.err.println("Submitting Query ... ");
+
+            hasresults = pstSelect.execute();
+
+            System.err.println("Getting Results ...");
+            
+            while (hasresults || pstSelect.getUpdateCount() != -1){
+
+                if (hasresults){
+
+                   resultset = pstSelect.getResultSet();
+                   
+                   if (resultset.next()){
+                       
+                       String badgeid = (resultset.getString("badgeid"));
+                       long payperiod = (resultset.getLong("payperiod"));
+                       double percentage = (resultset.getDouble("percentage"));
+                       
+                       a = new Absenteeism(badgeid, payperiod, percentage);
+                       
+                   }
+                   
+   
+                }
+            
+                hasresults = pstSelect.getMoreResults();
+                
+                System.out.println();
+            }
+            
+        }catch(Exception e){
+            System.err.println(e.toString());
+        }
+        
+        finally{
+            if(resultset != null){try{resultset.close(); resultset = null;} catch (Exception e){}};
+            
+            if(pstSelect != null){try{pstSelect.close(); pstSelect = null;} catch (Exception e){}};
+            
+            if(pstUpdate != null){try{pstUpdate.close(); pstUpdate = null;} catch (Exception e){}};
+            
+            
+        }
+        
+         return a;
+        
+    }
+    
+    public Absenteeism insertAbsenteeism(Absenteeism absentee){  //needed helps
+        
+        PreparedStatement pstSelect = null, pstUpdate = null;
+        ResultSet resultset = null;
+         
+        String query;
+        int updateCount = 0;
+        int badgeId = 0;
+        
+        
+        String newBadgeId = absentee.getBadgeId();
+        long PayTS = absentee.getpayTS();
+        double newPercentage = absentee.getPercentage();
+        
+        GregorianCalendar newPayTS = new GregorianCalendar();
+        newPayTS.setTimeInMillis(PayTS);
+        
+        String formattedPayTS = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss").format(newPayTS.getTime()).toUpperCase();
+        
+        
+        try{
+            
+            System.out.println("Connected Successfully!");
+            
+            query = "INSERT INTO absenteeism (badgeid, payperiod,percentage) "
+                    + "VALUES (?, ?, ?) ";
+            
+            pstUpdate = conn.prepareStatement(query, Statement.RETURN_GENERATED_KEYS);
+            pstUpdate.setString(1, newBadgeId);
+            pstUpdate.setString(2, formattedPayTS);
+            pstUpdate.setDouble(3, newPercentage);
+            
+            updateCount = pstUpdate.executeUpdate();
+            
+            if (updateCount > 0){
+                
+                resultset = pstUpdate.getGeneratedKeys();
+                
+                if(resultset.next()){
+                    
+                    badgeId = resultset.getInt(1);
+                    System.out.println("Update Successfully! New Key: " );
+                    System.out.println(badgeId);
+                }
+            }
+            
+            
+        }catch (Exception e){
+            System.err.println(e.toString());
+        }
+         
+        finally{
+            if(resultset != null){try{resultset.close(); resultset = null;} catch(Exception e){}};
+            
+            if(pstSelect != null){try{pstSelect.close(); pstSelect = null;} catch(Exception e){}};
+            
+            if(pstUpdate != null){try{pstUpdate.close(); pstUpdate = null;} catch(Exception e){}};
+        }
+         
+        return absentee;
+    }
    
 }
 
