@@ -1,31 +1,96 @@
 package cs310.team.project;
 
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.*;
 import org.json.simple.*;
 
-public class TASLogic {
+public class TASLogic 
+{
     
-    public TASLogic(){
-        
-       
-        
+    public TASLogic()
+    {
+
     }
     
-    public static int calculateTotalMinutes(ArrayList<Punch> dailypunchlist, Shift shift){
+    public static int calculateTotalMinutes(ArrayList<Punch> dailypunchlist, Shift shift)
+    {
+        int lunch_deduction = 360;
+        int minutes  = -1;
+
+        int minute_conversion = 60000;
+        int lunch_time = 30;
         
+        if(dailypunchlist.size() == 0)
+        {
+            minutes = 0;
+        }
         
+        else if (dailypunchlist.size() == 1)
+        {
+            minutes = 0;
+        }
+        else if(dailypunchlist.size() == 2)
+         {
+            long in_time = dailypunchlist.get(0).getAdjustedTS();
+            long out_time = dailypunchlist.get(1).getAdjustedTS();
+            
+            if(((out_time - in_time) / minute_conversion) > lunch_deduction)
+            {
+                minutes = (int)(((out_time - in_time) / minute_conversion) - lunch_time);
+            }
+            
+            else
+            {
+                minutes = (int)((out_time - in_time) / minute_conversion);
+            }
+            
+            
+        }
         
-        return 0;
-    }
+        else if (dailypunchlist.size() == 3)
+        {
+            minutes = 0;
+        }
+        
+        else if (dailypunchlist.size() == 4)
+        {
+            long time_in = dailypunchlist.get(0).getAdjustedTS();
+            long lunch_start = dailypunchlist.get(1).getAdjustedTS();
+            long lunch_stop = dailypunchlist.get(2).getAdjustedTS();
+            long out_time = dailypunchlist.get(3).getAdjustedTS();
+            
+            long lunch_break = lunch_stop - lunch_start;
+            
+            if(((out_time - time_in) / minute_conversion) > lunch_deduction)
+            {
+                minutes = (int)(((out_time - time_in) - lunch_break) / minute_conversion);
+            }
+            
+            else
+            {
+                 minutes = (int)((out_time - time_in) / minute_conversion);  
+            }
+        }
+        
+        else 
+        {
+            minutes = -1;
+        }
+        
+        return minutes;
+}
     
-    public static String getPunchListAsJSON(ArrayList<Punch> dailypunchlist){
+    
+
+    
+    public static String getPunchListAsJSON(ArrayList<Punch> dailypunchlist)
+    {
         
 
        ArrayList<HashMap<String, String>> jsonData = new ArrayList<>();
        
        
-       for(int i = 0 ; i < dailypunchlist.size(); ++i){
+       for(int i = 0 ; i < dailypunchlist.size(); ++i)
+       {
            
             Punch punch = dailypunchlist.get(i);
            
