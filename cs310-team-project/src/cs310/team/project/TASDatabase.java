@@ -108,11 +108,11 @@ import java.text.SimpleDateFormat;
             pstSelect = conn.prepareStatement(query);
             pstSelect.setInt(1, punchID);
             
-            System.err.println("Submitting Query ... ");
+            //System.err.println("Submitting Query ... ");
 
             hasresults = pstSelect.execute();
 
-            System.err.println("Getting Results ...");
+            //System.err.println("Getting Results ...");
             
             while (hasresults || pstSelect.getUpdateCount() != -1){
 
@@ -178,11 +178,11 @@ import java.text.SimpleDateFormat;
             pstSelect = conn.prepareStatement(query);
             pstSelect.setInt(1, shiftID);
             
-            System.err.println("Submitting Query ... ");
+            //System.err.println("Submitting Query ... ");
 
             hasresults = pstSelect.execute();
 
-            System.err.println("Getting Results ...");
+            //System.err.println("Getting Results ...");
             
             while (hasresults || pstSelect.getUpdateCount() != -1){
 
@@ -243,11 +243,11 @@ import java.text.SimpleDateFormat;
             pstSelect = conn.prepareStatement(query);
             pstSelect.setString(1, badge.getId());
             
-            System.err.println("Submitting Query ... ");
+            //System.err.println("Submitting Query ... ");
 
             hasresults = pstSelect.execute();
 
-            System.err.println("Getting Results ...");
+            //System.err.println("Getting Results ...");
             
             while (hasresults || pstSelect.getUpdateCount() != -1){
 
@@ -307,7 +307,7 @@ import java.text.SimpleDateFormat;
          String formattedTS = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss").format(originalTS.getTime()).toUpperCase();
         try{
             
-               System.out.println("Connected Successfully!");
+               //System.out.println("Connected Successfully!");
 
                query = "INSERT INTO punch (terminalid, badgeid, originaltimestamp,"
                        + " punchtypeid) VALUES (?, ?, ?, ?)";
@@ -327,7 +327,7 @@ import java.text.SimpleDateFormat;
                    
                    if (resultset.next()){
                        
-                       System.out.print("Update Successful!!");
+                       //System.out.print("Update Successful!!");
                        id = resultset.getInt(1);
                    }
                    
@@ -395,11 +395,11 @@ import java.text.SimpleDateFormat;
             pstSelect.setString(2, startTime);
             pstSelect.setString(3, stopTime);
             
-            System.err.println("Submitting Query ... ");
+            //System.err.println("Submitting Query ... ");
 
             hasresults = pstSelect.execute();
 
-            System.err.println("Getting Results ...");
+            //System.err.println("Getting Results ...");
             
             while (hasresults || pstSelect.getUpdateCount() != -1){
 
@@ -470,14 +470,14 @@ import java.text.SimpleDateFormat;
          
          GregorianCalendar start = new GregorianCalendar();
          start.setTimeInMillis(ts);
-         start.set(Calendar.DAY_OF_WEEK,7);
+         start.set(Calendar.DAY_OF_WEEK,Calendar.SUNDAY);
          start.set(Calendar.HOUR_OF_DAY, 0);
          start.set(Calendar.MINUTE, 0);
          start.set(Calendar.SECOND, 0);
          
          GregorianCalendar stop = new GregorianCalendar();
          stop.setTimeInMillis(ts);
-         stop.set(Calendar.DAY_OF_WEEK, 6);
+         stop.set(Calendar.DAY_OF_WEEK, Calendar.SATURDAY);
          stop.set(Calendar.HOUR_OF_DAY, 23);
          stop.set(Calendar.MINUTE, 59);
          stop.set(Calendar.SECOND, 59);
@@ -498,11 +498,11 @@ import java.text.SimpleDateFormat;
             pstSelect.setString(2, startTime);
             pstSelect.setString(3, stopTime);
             
-            System.err.println("Submitting Query ... ");
+            //System.err.println("Submitting Query ... ");
 
             hasresults = pstSelect.execute();
 
-            System.err.println("Getting Results ...");
+            //System.err.println("Getting Results ...");
             
             while (hasresults || pstSelect.getUpdateCount() != -1){
 
@@ -557,6 +557,13 @@ import java.text.SimpleDateFormat;
         PreparedStatement pstSelect = null, pstUpdate = null;
         ResultSet resultset = null;
         
+        GregorianCalendar gc = new GregorianCalendar();
+        gc.setTimeInMillis(ts);
+        gc.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
+        gc.set(Calendar.HOUR_OF_DAY, 0);
+        gc.set(Calendar.MINUTE, 0);
+        gc.set(Calendar.SECOND, 0);
+        
         String query;
         
         boolean hasresults;
@@ -570,13 +577,15 @@ import java.text.SimpleDateFormat;
             
             pstSelect = conn.prepareStatement(query);
             pstSelect.setString(1, id);
-            pstSelect.setLong(2, ts);
+            pstSelect.setLong(2, gc.getTimeInMillis());
             
-            System.err.println("Submitting Query ... ");
+            System.err.println("Badge ID: " + id + "; Timestamp: " + gc.getTimeInMillis());
+            
+            //System.err.println("Submitting Query ... ");
 
             hasresults = pstSelect.execute();
 
-            System.err.println("Getting Results ...");
+            //System.err.println("Getting Results ...");
             
             while (hasresults || pstSelect.getUpdateCount() != -1){
 
@@ -661,7 +670,7 @@ import java.text.SimpleDateFormat;
                 if(resultset.next()){
                     
                     badgeId = resultset.getInt(1);
-                    System.out.println("Update Successfully! New Key: " );
+                    //System.out.println("Update Successfully! New Key: " );
                     System.out.println(badgeId);
                 }
             }
