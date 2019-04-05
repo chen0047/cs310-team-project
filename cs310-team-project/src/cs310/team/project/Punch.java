@@ -22,8 +22,8 @@ public class Punch {
     private long Timestamp;
 
     private String trigger = "";
-
-
+    private int day;
+    
     public Punch(Badge badge, int terminalId,int punchId) {
 
     originalTS = new GregorianCalendar();
@@ -252,6 +252,7 @@ public class Punch {
             adjustedTS.set(adjustedTS.SECOND, 0);
             trigger = "Interval Round";
         }
+        
     }
     
     public String printAdjustedTimestamp() {
@@ -275,4 +276,8 @@ public class Punch {
         return "#" + badge.getId() + Status + formattedTime + " " + "("+ trigger + ")";
     }
 
+
+    int getDayOfWeek() {
+        return originalTS.DAY_OF_WEEK;    
+    }
 }
