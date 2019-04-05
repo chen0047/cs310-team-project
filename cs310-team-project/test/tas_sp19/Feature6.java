@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import org.junit.*;
 import static org.junit.Assert.*;
 import cs310.team.project.*;
+import java.util.GregorianCalendar;
 
 public class Feature6 {
     
@@ -45,7 +46,9 @@ public class Feature6 {
         
         /* Retrieve Absenteeism From Database */
         
-        Absenteeism a2 = db.getAbsenteeism(b.getId(), ts);
+        Absenteeism a2 = db.getAbsenteeism(b.getId(), ts);       
+        
+        System.err.println("Feature 6 Test: Badge ID: " + b.getId() + ": Timestamp: "+ ts);
         
         /* Compare to Expected Value */
         

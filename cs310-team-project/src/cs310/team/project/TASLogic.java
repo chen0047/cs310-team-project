@@ -120,5 +120,28 @@ public class TASLogic
         return 0;
     } 
     
+    public static String getPunchListPlusTotalsAsJSON(ArrayList<Punch> punchlist, Shift s){
+        
+        ArrayList<HashMap<String, String>> jsonData = new ArrayList<>();
+       
+        for(int i = 0; i < punchlist.size(); ++i){
+            
+            Punch punch = punchlist.get(i);
+            
+            HashMap<String, String> totalminutes = new HashMap<>();
+            HashMap<String, String> absenteeism = new HashMap<>();
+            
+            
+        
+        
+        
+        }
+        String json = JSONValue.toJSONString(jsonData);
+        
+        return json;
+        
+        
+    }
+    
     
 }

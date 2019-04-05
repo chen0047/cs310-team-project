@@ -564,6 +564,8 @@ import java.text.SimpleDateFormat;
         gc.set(Calendar.MINUTE, 0);
         gc.set(Calendar.SECOND, 0);
         
+        String gcString = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss").format(gc.getTime());
+        
         String query;
         
         boolean hasresults;
@@ -573,15 +575,16 @@ import java.text.SimpleDateFormat;
         try{
             
             query = "SELECT *, UNIX_TIMESTAMP(payperiod)*1000 AS ts "
-                    + "FROM absenteeism WHERE badgeid=? HAVING ts = ?";  //needed helps
+                    + "FROM absenteeism WHERE badgeid=? AND payperiod=?";  //needed helps
             
             pstSelect = conn.prepareStatement(query);
             pstSelect.setString(1, id);
-            pstSelect.setLong(2, gc.getTimeInMillis());
+            pstSelect.setString(2, gcString);
             
-            System.err.println("Badge ID: " + id + "; Timestamp: " + gc.getTimeInMillis());
+            System.err.println("getAbsenteeism: Badge ID: " + id + "; Timestamp: " + gc.getTimeInMillis());
             
-            //System.err.println("Submitting Query ... ");
+            //System.err.println("Submitting Query ... ");            pstSelect.setString(1, id);
+
 
             hasresults = pstSelect.execute();
 
@@ -593,11 +596,15 @@ import java.text.SimpleDateFormat;
 
                    resultset = pstSelect.getResultSet();
                    
+                   System.err.println("getAbsenteeism: Processing results ...");
+                   
                    if (resultset.next()){
                        
                        String badgeid = (resultset.getString("badgeid"));
-                       long payperiod = (resultset.getLong("payperiod"));
+                       long payperiod = (resultset.getLong("ts"));
                        double percentage = (resultset.getDouble("percentage"));
+                       
+                       System.err.println("getAbsenteeism: Created new Absenteeism object ...");
                        
                        a = new Absenteeism(badgeid, payperiod, percentage);
                        
@@ -645,6 +652,8 @@ import java.text.SimpleDateFormat;
         
         GregorianCalendar newPayTS = new GregorianCalendar();
         newPayTS.setTimeInMillis(PayTS);
+        
+        System.err.println("insertAbsenteeism: Badge ID: " + newBadgeId + "; Timestamp: " + PayTS);
         
         String formattedPayTS = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss").format(newPayTS.getTime()).toUpperCase();
         
