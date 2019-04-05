@@ -13,6 +13,7 @@ public class Shift {
     private int interval;
     private int graceperiod;
     private int dock;
+    private int numOfDaysInShift;
 
     private LocalTime lunchstart;
     private LocalTime lunchstop;
@@ -29,7 +30,8 @@ public class Shift {
        
        lunchstart = LocalTime.now();
        lunchstop = LocalTime.now();
- 
+       if(id == 1 || id == 2 || id == 3 || id == 4)
+            this.numOfDaysInShift = 5;
     }
 
     public LocalTime getStart() {
@@ -163,6 +165,12 @@ public class Shift {
     @Override
     public String toString() {
         return "" + description + ": " + start + " - " + stop + " (" + MINUTES.between(start, stop) + " minutes); Lunch: " + lunchstart + " - " + lunchstop + " (" + MINUTES.between(lunchstart, lunchstop) + " minutes)";
+    }
+    public long getTotalMinutes(){
+        return MINUTES.between(start, stop) - MINUTES.between(lunchstart, lunchstop);
+    }
+    public int getNumOfDaysInShift(){
+        return this.numOfDaysInShift;
     }
      
 }
