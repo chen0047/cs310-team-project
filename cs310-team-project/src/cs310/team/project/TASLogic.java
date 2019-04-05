@@ -113,12 +113,35 @@ public class TASLogic
         
     }
     
-    public static double calculateAbsenteeism(ArrayList<Punch> punchlist, Shift shift){
-        
-        
-        
-        return 0;
-    } 
-    
-    
+    public static double calculateAbsenteeism(ArrayList<Punch> punchlist, Shift shift) {
+       double totalAccuredTime = 0;
+       double totalShiftTime = 0;
+       double percent = 0.0;
+       
+       System.out.println("ArrayList size: " + punchlist.size());
+       
+       ArrayList<ArrayList<Punch>> dailyPunchLists = new ArrayList<>(); 
+       
+      
+       for(int i = 1; i < 8; i++){
+           ArrayList<Punch> dayOfPunches = new ArrayList<>();
+           for(int j = 0 ; j < punchlist.size(); j++){
+               if(punchlist.get(j).getDayOfWeek() == i)
+                   dayOfPunches.add(punchlist.get(j));
+           }
+           if(!dayOfPunches.isEmpty())
+                dailyPunchLists.add(dayOfPunches);
+       }
+       
+       for(int i = 0; i < dailyPunchLists.size(); i++){
+          totalAccuredTime += TASLogic.calculateTotalMinutes(dailyPunchLists.get(i), shift);
+          totalShiftTime = shift.getTotalMinutes() * shift.getNumOfDaysInShift();        
+      }
+       System.out.println("Time worked: " + totalAccuredTime);
+       System.out.println("Shift time: " + totalShiftTime);
+       percent = 100 - ((totalAccuredTime/totalShiftTime)* 100);
+       System.out.println("Percentage: " + percent);
+  
+       return percent;
+    }   
 }
