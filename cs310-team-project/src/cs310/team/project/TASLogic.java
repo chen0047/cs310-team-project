@@ -118,9 +118,11 @@ public class TASLogic
        double total_accrued_time = 0;      
        System.out.println("ArrayList size: " + punchlist.size());
        double total_shift_time = 0;
-       double percent = 0.0;
+       double percent = 0;
+       
        ArrayList<ArrayList<Punch>> dailyPunchLists = new ArrayList<>(); 
-        for(int i = 0; i < dailyPunchLists.size(); i++)
+       
+       for(int i = 0; i < dailyPunchLists.size(); i++)
         {
           total_accrued_time += TASLogic.calculateTotalMinutes(dailyPunchLists.get(i), shift);
           total_shift_time = shift.getTotalMinutes() * shift.getNumOfDaysInShift();        
@@ -129,6 +131,7 @@ public class TASLogic
        for(int i = 1; i < 8; i++)
        {
            ArrayList<Punch> dayOfPunches = new ArrayList<>();
+           
            for(int j = 0 ; j < punchlist.size(); j++)
            {
                if(punchlist.get(j).getDayOfWeek() == i)
@@ -140,9 +143,36 @@ public class TASLogic
        
        System.out.println("Time worked: " + total_accrued_time);
        System.out.println("Shift time: " + total_shift_time);
-       percent = 100 - ((total_accrued_time/total_shift_time)* 100);
+       percent = (total_accrued_time/total_shift_time)* 100;
        System.out.println("Percentage: " + percent);
   
        return percent;
     }   
+    
+    public static String getPunchListPlusTotalsAsJSON(ArrayList<Punch> punchlist, Shift s){
+        
+        ArrayList<HashMap<String, String>> jsonData = new ArrayList<>();
+       
+        for (int i = 0; i < punchlist.size(); i++){
+        
+            Punch punch = punchlist.get(i);
+          
+            HashMap<String, String> punchData = new HashMap<>();
+            
+            punchData.put("punchdata", String.valueOf(punch.getTrigger()));
+            punchData.put("originaltimestamp", String.valueOf(punch.getOriginalTS()));
+            punchData.put("badgeid",String.valueOf(punch.getBadgeId()));
+            punchData.put("adjustedtimestamp", String.valueOf(punch.getAdjustedTS()));
+            punchData.put("punchtypeid", String.valueOf(punch.getPunchType()));
+            punchData.put("terminalid", String.valueOf(punch.getTerminalId()));
+            punchData.put("id", String.valueOf(punch.getPunchId()));
+            punchData.put("totalminutes", String.valueOf(s.getTotalMinutes()));
+            punchData.put("absenteeism", String.valueOf(TASLogic.calculateAbsenteeism(punchlist, s)));
+            
+            jsonData.add(punchData);
+            
+        }
+        String json = JSONValue.toJSONString(jsonData);
+        return json;
+    } 
 }

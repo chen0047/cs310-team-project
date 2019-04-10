@@ -50,11 +50,11 @@ import java.text.SimpleDateFormat;
             pstSelect = conn.prepareStatement(query);
             pstSelect.setString(1, badgeID);            
             
-            System.err.println("Submitting Query ... ");
+            //System.err.println("Submitting Query ... ");
 
             hasresults = pstSelect.execute();
 
-            System.err.println("Getting Results ...");
+            //System.err.println("Getting Results ...");
             
             while (hasresults || pstSelect.getUpdateCount() != -1){
 
@@ -583,8 +583,7 @@ import java.text.SimpleDateFormat;
             
             System.err.println("getAbsenteeism: Badge ID: " + id + "; Timestamp: " + gc.getTimeInMillis());
             
-            //System.err.println("Submitting Query ... ");            pstSelect.setString(1, id);
-
+            //System.err.println("Submitting Query ... ");
 
             hasresults = pstSelect.execute();
 
@@ -642,6 +641,7 @@ import java.text.SimpleDateFormat;
         ResultSet resultset = null;
          
         String query;
+        boolean hasresults;
         int updateCount = 0;
         int badgeId = 0;
         
@@ -653,14 +653,18 @@ import java.text.SimpleDateFormat;
         GregorianCalendar newPayTS = new GregorianCalendar();
         newPayTS.setTimeInMillis(PayTS);
         
-        System.err.println("insertAbsenteeism: Badge ID: " + newBadgeId + "; Timestamp: " + PayTS);
+        System.err.println("insertAbsenteeism: Badge ID: " + newBadgeId + "; Timestamp: " + PayTS + "; Percentage: " + newPercentage);
         
         String formattedPayTS = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss").format(newPayTS.getTime()).toUpperCase();
         
         
         try{
             
-            System.out.println("Connected Successfully!");
+            //System.out.println("Connected Successfully!");
+            query = "DELETE FROM absenteeism WHERE badgeid = ? AND payperiod = ?";
+            
+            pstSelect = conn.prepareStatement(query);
+            hasresults = pstSelect.execute();
             
             query = "INSERT INTO absenteeism (badgeid, payperiod,percentage) "
                     + "VALUES (?, ?, ?) ";
