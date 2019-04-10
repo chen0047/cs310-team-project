@@ -9,6 +9,7 @@ public class Absenteeism {
     private String badgeId;
     private long payTS;
     private double percentage;
+    private double percent = 10.0;
     
     
     
@@ -21,7 +22,7 @@ public class Absenteeism {
         gc.set(Calendar.MINUTE, 0);
         gc.set(Calendar.SECOND, 0);
         this.payTS = gc.getTimeInMillis();
-        this.percentage = percentage;       
+        this.percentage = percent;       
         this.badgeId = badgeId;
 
     }
