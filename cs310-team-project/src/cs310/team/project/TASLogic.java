@@ -109,9 +109,9 @@ public class TASLogic
     }
     
     public static double calculateAbsenteeism(ArrayList<Punch> punchlist, Shift shift) {
-            double totalAccuredTime = 0;
-            double totalShiftTime = 0;
-            double percent = 0.0;
+       double totalAccuredTime = 0;
+       double totalShiftTime = 0;
+       double percent = 0.0;
        
        System.out.println("ArrayList size: " + punchlist.size());
        
@@ -136,9 +136,8 @@ public class TASLogic
         
        System.out.println("Time actually worked: " + totalAccuredTime);
        System.out.println("Shift time in minutes: " + totalShiftTime);
-             
-       percent = 0; //Calc absenteeism as percentage
-      
+       percent = 100 - (totalAccuredTime/totalShiftTime) * 100; //Calc absenteeism as percentage
+       System.out.println("Percent: " + percent);
        return percent;
     }
 }
