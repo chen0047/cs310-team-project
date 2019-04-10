@@ -30,7 +30,14 @@ public class Shift {
        
        lunchstart = LocalTime.now();
        lunchstop = LocalTime.now();
-       if(id == 1 || id == 2 || id == 3 || id == 4)
+    }
+    public Shift(LocalTime st, LocalTime sto, int shiftid, LocalTime lunch_start, LocalTime lunch_stop){
+        this.start = st;
+        this.stop = sto;
+        this.id = shiftid;
+        this.lunchstart = lunch_start;
+        this.lunchstop = lunch_stop;
+        if(shiftid == 1 || shiftid == 2 || shiftid == 3 || shiftid == 4)
             this.numOfDaysInShift = 5;
     }
 
@@ -58,7 +65,14 @@ public class Shift {
     
     // implement setShiftStop, setLunchStart, and setLunchStop here (follow the pattern shown above)
     
-    
+    public int getShiftLength() {
+        int shiftLengthInMinutes = 0;
+
+        
+        shiftLengthInMinutes =  (int) (MINUTES.between(start, stop) - MINUTES.between(lunchstart, lunchstop));
+        
+       return shiftLengthInMinutes; 
+    }
     
     public int getShiftStartHour() {
         return (start.getHour());
@@ -120,6 +134,7 @@ public class Shift {
 
     public void setId(int id) {
         this.id = id;
+
     }
 
     public String getDescription() {
@@ -166,10 +181,10 @@ public class Shift {
     public String toString() {
         return "" + description + ": " + start + " - " + stop + " (" + MINUTES.between(start, stop) + " minutes); Lunch: " + lunchstart + " - " + lunchstop + " (" + MINUTES.between(lunchstart, lunchstop) + " minutes)";
     }
-    public long getTotalMinutes(){
-        return MINUTES.between(start, stop) - MINUTES.between(lunchstart, lunchstop);
-    }
+
+
     public int getNumOfDaysInShift(){
+
         return this.numOfDaysInShift;
     }
      
