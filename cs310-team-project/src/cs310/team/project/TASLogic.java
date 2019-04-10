@@ -6,11 +6,6 @@ import org.json.simple.*;
 public class TASLogic 
 {
     
-    public TASLogic()
-    {
-
-    }
-    
     public static int calculateTotalMinutes(ArrayList<Punch> dailypunchlist, Shift shift)
     {
         int lunch_deduction = 360;
@@ -113,23 +108,22 @@ public class TASLogic
         
     }
     
-    public static double calculateAbsenteeism(ArrayList<Punch> punchlist, Shift shift)
-    {
-       double total_accrued_time = 0;      
-       System.out.println("ArrayList size: " + punchlist.size());
-       double total_shift_time = 0;
-       double percent = 0;
+    public static double calculateAbsenteeism(ArrayList<Punch> punchlist, Shift shift) {
+        double totalAccuredTime = 0;
+        double totalShiftTime = 0;
+        double percent = 0.0;
        
+       System.out.println("ArrayList size: " + punchlist.size());
+      
        ArrayList<ArrayList<Punch>> dailyPunchLists = new ArrayList<>(); 
        
        for(int i = 0; i < dailyPunchLists.size(); i++)
         {
-          total_accrued_time += TASLogic.calculateTotalMinutes(dailyPunchLists.get(i), shift);
-          total_shift_time = shift.getTotalMinutes() * shift.getNumOfDaysInShift();        
+          totalAccuredTime += TASLogic.calculateTotalMinutes(dailyPunchLists.get(i), shift);
+          totalShiftTime = shift.getShiftLength() * shift.getNumOfDaysInShift();        
         }
       
-       for(int i = 1; i < 8; i++)
-       {
+       for(int i = 1; i < 8; i++){
            ArrayList<Punch> dayOfPunches = new ArrayList<>();
            
            for(int j = 0 ; j < punchlist.size(); j++)
@@ -141,9 +135,9 @@ public class TASLogic
                 dailyPunchLists.add(dayOfPunches);
        }
        
-       System.out.println("Time worked: " + total_accrued_time);
-       System.out.println("Shift time: " + total_shift_time);
-       percent = (total_accrued_time/total_shift_time)* 100;
+       System.out.println("Time worked: " + totalAccuredTime);
+       System.out.println("Shift time: " + totalShiftTime);
+       percent = (totalAccuredTime/totalShiftTime)* 100;
        System.out.println("Percentage: " + percent);
   
        return percent;
@@ -166,7 +160,7 @@ public class TASLogic
             punchData.put("punchtypeid", String.valueOf(punch.getPunchType()));
             punchData.put("terminalid", String.valueOf(punch.getTerminalId()));
             punchData.put("id", String.valueOf(punch.getPunchId()));
-            punchData.put("totalminutes", String.valueOf(s.getTotalMinutes()));
+            punchData.put("totalminutes", String.valueOf(s.getShiftLength()));
             punchData.put("absenteeism", String.valueOf(TASLogic.calculateAbsenteeism(punchlist, s)));
             
             jsonData.add(punchData);

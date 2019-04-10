@@ -277,7 +277,7 @@ public class Punch {
     }
 
 
-    int getDayOfWeek() {
-        return originalTS.DAY_OF_WEEK;    
+    public int getDayOfWeek() {
+        return originalTS.get(Calendar.DAY_OF_WEEK);    
     }
 }
