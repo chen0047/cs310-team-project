@@ -33,6 +33,10 @@ public class Feature6 {
         
         for (Punch punch : punchlist) {
             punch.adjust(s);
+            System.out.println(punch.printOriginalTimestamp());
+            System.out.println(punch.printAdjustedTimestamp());
+            System.out.println();
+            
         }
         
         /* Compute Pay Period Total Absenteeism */

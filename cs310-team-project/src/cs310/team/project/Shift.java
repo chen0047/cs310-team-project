@@ -62,11 +62,8 @@ public class Shift {
     // implement setShiftStop, setLunchStart, and setLunchStop here (follow the pattern shown above)
     
     public long getShiftLength() {
-        long shiftLengthInMinutes = 0;
-
-        
-        shiftLengthInMinutes =   MINUTES.between(start, stop) - MINUTES.between(lunchstart, lunchstop);
-        
+       long shiftLengthInMinutes = 0;        
+       shiftLengthInMinutes =   MINUTES.between(start, stop) - MINUTES.between(lunchstart, lunchstop);        
        return shiftLengthInMinutes; 
     }
     

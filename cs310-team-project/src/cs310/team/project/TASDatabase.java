@@ -491,7 +491,7 @@ import java.text.SimpleDateFormat;
       
             query = "SELECT *, UNIX_TIMESTAMP(originaltimestamp)*1000 AS ts "
                     + "FROM punch p WHERE badgeid = ? AND originaltimestamp >= ? "
-                    + "AND originaltimestamp <= ?";
+                    + "AND originaltimestamp <= ? ORDER BY originaltimestamp";
             
             pstSelect = conn.prepareStatement(query);
             pstSelect.setString(1, badgeid);

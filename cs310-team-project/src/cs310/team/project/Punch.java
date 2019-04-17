@@ -154,7 +154,8 @@ public class Punch {
         adjustedTS = (GregorianCalendar) originalTS.clone();
         LocalTime time = LocalTime.of(originalTS.get(originalTS.HOUR_OF_DAY), originalTS.get(originalTS.MINUTE), 0);
         int unroundedMinutes = originalTS.get(originalTS.MINUTE);
-        int mod = unroundedMinutes % 15;
+        int interval = s.getInterval();
+        int mod = unroundedMinutes % interval;
         int day = originalTS.get(originalTS.DAY_OF_WEEK);
         
         if(day != originalTS.SATURDAY && day != originalTS.SUNDAY)
@@ -193,7 +194,7 @@ public class Punch {
                 {
                     if(mod !=0)
                     {  
-                        adjustedTS.add(Calendar.MINUTE, 15 - unroundedMinutes);
+                        adjustedTS.add(Calendar.MINUTE, mod < interval/2 ? -mod : (15-mod));
                         adjustedTS.set(adjustedTS.SECOND, 0);
                         trigger = "Interval Round";
                     }
@@ -238,7 +239,7 @@ public class Punch {
                 {
                     if(mod !=0)
                     {  
-                        adjustedTS.add(Calendar.MINUTE, 15 - unroundedMinutes);
+                        adjustedTS.add(Calendar.MINUTE, mod < interval/2 ? -mod : (15-mod));
                         adjustedTS.set(adjustedTS.SECOND, 0);
                         trigger = "Interval Round";
                     }
