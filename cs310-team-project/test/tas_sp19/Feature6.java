@@ -48,7 +48,7 @@ public class Feature6 {
         
         Absenteeism a2 = db.getAbsenteeism(b.getId(), ts);       
         
-        System.err.println("Feature 6 Test: Badge ID: " + b.getId() + ": Timestamp: "+ ts);
+        System.err.println("Feature 6 Test testAbsenteeismShift1Weekday: Badge ID: " + b.getId() + ": Timestamp: "+ ts);
         
         /* Compare to Expected Value */
         
@@ -129,6 +129,8 @@ public class Feature6 {
         Absenteeism a2 = db.getAbsenteeism(b.getId(), ts);
         
         /* Compare to Expected Value */
+        
+        System.err.println("Feature 6 Test testAbsenteeismShift2Weekend: Badge ID: " + b.getId() + ": Timestamp: "+ ts);
         
         assertEquals("#08D01475 (Pay Period Starting 09-16-2018): -27.50%", a2.toString());
         

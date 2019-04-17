@@ -2,6 +2,7 @@
 package cs310.team.project;
 
 import java.time.LocalTime;
+import java.time.temporal.ChronoUnit;
 import static java.time.temporal.ChronoUnit.MINUTES;
 
 public class Shift {
@@ -48,6 +49,10 @@ public class Shift {
         return lunchstop;
     }
     
+    public int getLunchDuration() {
+        return (int)( lunchstart.until(lunchstop, ChronoUnit.MINUTES) );
+    }
+    
     public void setShiftStart(int hour, int minute) {
         
         start = LocalTime.of(hour, minute, 0);
@@ -63,6 +68,10 @@ public class Shift {
         shiftLengthInMinutes =   MINUTES.between(start, stop) - MINUTES.between(lunchstart, lunchstop);
         
        return shiftLengthInMinutes; 
+    }
+    
+    public int getTotalScheduledHours() {
+        return ( (int)getShiftLength() * 5 ); // CHANGE THIS LATER;IT'S NASTY!!!
     }
     
     public int getShiftStartHour() {

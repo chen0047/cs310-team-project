@@ -39,7 +39,7 @@ public class Feature4 {
         assertEquals(480, m);
         
     }
-    
+     
     @Test
     public void testMinutesAccruedShift1WeekdayWithTimeout() {
 		

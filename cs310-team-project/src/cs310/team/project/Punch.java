@@ -5,6 +5,10 @@ import java.text.SimpleDateFormat;
 import java.time.LocalTime;
 
 public class Punch {
+    
+    public static final int CLOCK_IN = 1;
+    public static final int CLOCK_OUT = 0;
+    public static final int TIME_OUT = 2;
 
     public Punch(){
         originalTS = new GregorianCalendar();

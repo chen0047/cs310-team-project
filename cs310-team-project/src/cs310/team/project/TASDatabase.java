@@ -652,8 +652,12 @@ import java.text.SimpleDateFormat;
         
         GregorianCalendar newPayTS = new GregorianCalendar();
         newPayTS.setTimeInMillis(PayTS);
+        newPayTS.set(Calendar.DAY_OF_WEEK, Calendar.SUNDAY);
+        newPayTS.set(Calendar.HOUR_OF_DAY, 0);
+        newPayTS.set(Calendar.MINUTE, 0);
+        newPayTS.set(Calendar.SECOND, 0);
         
-        System.err.println("insertAbsenteeism: Badge ID: " + newBadgeId + "; Timestamp: " + PayTS + "; Percentage: " + newPercentage);
+        System.err.println("insertAbsenteeism: Badge ID: " + newBadgeId + "; Timestamp: " + newPayTS.getTimeInMillis() + "; Percentage: " + newPercentage);
         
         String formattedPayTS = new SimpleDateFormat("YYYY-MM-dd HH:mm:ss").format(newPayTS.getTime()).toUpperCase();
         
@@ -664,6 +668,8 @@ import java.text.SimpleDateFormat;
             query = "DELETE FROM absenteeism WHERE badgeid = ? AND payperiod = ?";
             
             pstSelect = conn.prepareStatement(query);
+            pstSelect.setString(1, newBadgeId);
+            pstSelect.setString(2, formattedPayTS);
             hasresults = pstSelect.execute();
             
             query = "INSERT INTO absenteeism (badgeid, payperiod,percentage) "
