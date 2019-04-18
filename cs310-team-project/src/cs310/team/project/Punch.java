@@ -194,7 +194,7 @@ public class Punch {
                 {
                     if(mod !=0)
                     {  
-                        if(originalTS.get(originalTS.SECOND) > 30)
+                        if(originalTS.get(originalTS.SECOND) > 50)
                         {
                             mod += 1;
                             adjustedTS.add(Calendar.MINUTE, mod < 8 ? -mod : (interval-(mod-1)));
@@ -245,7 +245,7 @@ public class Punch {
                 {
                     if(mod !=0)
                     {  
-                        if(originalTS.get(originalTS.SECOND) > 30)
+                        if(originalTS.get(originalTS.SECOND) > 50)
                         {
                             mod += 1;
                             adjustedTS.add(Calendar.MINUTE, mod < 8 ? -mod : (interval-(mod-1)));
