@@ -194,7 +194,13 @@ public class Punch {
                 {
                     if(mod !=0)
                     {  
-                        adjustedTS.add(Calendar.MINUTE, mod < interval/2 ? -mod : (15-mod));
+                        if(originalTS.get(originalTS.SECOND) > 30)
+                        {
+                            mod += 1;
+                            adjustedTS.add(Calendar.MINUTE, mod < 8 ? -mod : (interval-(mod-1)));
+                        }
+                        else
+                            adjustedTS.add(Calendar.MINUTE, mod < 8 ? -mod : (interval-mod));
                         adjustedTS.set(adjustedTS.SECOND, 0);
                         trigger = "Interval Round";
                     }
@@ -239,7 +245,13 @@ public class Punch {
                 {
                     if(mod !=0)
                     {  
-                        adjustedTS.add(Calendar.MINUTE, mod < interval/2 ? -mod : (15-mod));
+                        if(originalTS.get(originalTS.SECOND) > 30)
+                        {
+                            mod += 1;
+                            adjustedTS.add(Calendar.MINUTE, mod < 8 ? -mod : (interval-(mod-1)));
+                        }
+                        else
+                            adjustedTS.add(Calendar.MINUTE, mod < 8 ? -mod : (interval-mod));
                         adjustedTS.set(adjustedTS.SECOND, 0);
                         trigger = "Interval Round";
                     }
