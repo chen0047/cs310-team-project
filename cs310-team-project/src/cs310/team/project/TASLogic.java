@@ -101,7 +101,7 @@ public class TASLogic
         int hoursscheduled = shift.getTotalScheduledHours();
         int hoursworked = calculateTotalMinutes(punchlist, shift);
         System.out.println( "calculateAbsenteeism(): hoursscheduled: " + hoursscheduled + ", hoursworked: " + hoursworked );       
-        double absenteeism = ( 100.0 - (((double)hoursworked / (double)hoursscheduled) * 100.0));
+        double absenteeism = ((((double)hoursscheduled/ (double)hoursworked) * 100.0) - 100);
         return absenteeism;
         
     }
