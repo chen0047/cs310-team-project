@@ -40,9 +40,49 @@ public class Shift {
     public LocalTime getStop() {
         return stop;
     }
+    
+    public LocalTime getStart(int day) {
+        return start;
+    }
+
+    public LocalTime getStop(int day) {
+        return stop;
+    }
+    
+    public int getShiftstarthour(int day) {
+        return start.getHour();
+    }
+    
+    public int getShiftstartminute(int day) {
+        return start.getMinute();
+    }
+    
+    public int getShiftstophour(int day) {
+        return stop.getHour();
+    }
+    
+    public int getShiftstopminute(int day) {
+        return stop.getMinute();
+    }
 
     public LocalTime getLunchstart() {
         return lunchstart;
+    }
+    
+    public int getLunchstarthour(int day) {
+        return lunchstart.getHour();
+    }
+    
+    public int getLunchstartminute(int day) {
+        return lunchstart.getMinute();
+    }
+    
+    public int getLunchstophour(int day) {
+        return lunchstop.getHour();
+    }
+    
+    public int getLunchstopminute(int day) {
+        return lunchstop.getMinute();
     }
 
     public LocalTime getLunchstop() {
@@ -62,11 +102,8 @@ public class Shift {
     // implement setShiftStop, setLunchStart, and setLunchStop here (follow the pattern shown above)
     
     public long getShiftLength() {
-        long shiftLengthInMinutes = 0;
-
-        
-        shiftLengthInMinutes =   MINUTES.between(start, stop) - MINUTES.between(lunchstart, lunchstop);
-        
+       long shiftLengthInMinutes = 0;        
+       shiftLengthInMinutes =   MINUTES.between(start, stop) - MINUTES.between(lunchstart, lunchstop);        
        return shiftLengthInMinutes; 
     }
     

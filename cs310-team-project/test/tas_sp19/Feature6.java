@@ -24,6 +24,8 @@ public class Feature6 {
         Badge b = db.getBadge(p.getBadgeId());
         Shift s = db.getShift(b);
         
+        System.out.println(s);
+        
         /* Get Pay Period Punch List */
         
         long ts = p.getOriginalTimeStamp();
@@ -33,6 +35,10 @@ public class Feature6 {
         
         for (Punch punch : punchlist) {
             punch.adjust(s);
+            System.out.println(punch.printOriginalTimestamp());
+            System.out.println(punch.printAdjustedTimestamp());
+            System.out.println();
+            
         }
         
         /* Compute Pay Period Total Absenteeism */
@@ -46,7 +52,7 @@ public class Feature6 {
         
         /* Retrieve Absenteeism From Database */
         
-        Absenteeism a2 = db.getAbsenteeism(b.getId(), ts);       
+        Absenteeism a2 = db.getAbsenteeism(b.getId(), ts);
         
         System.err.println("Feature 6 Test testAbsenteeismShift1Weekday: Badge ID: " + b.getId() + ": Timestamp: "+ ts);
         

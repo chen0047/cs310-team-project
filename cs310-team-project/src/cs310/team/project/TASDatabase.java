@@ -126,6 +126,9 @@ import java.text.SimpleDateFormat;
                         p.setBadge(getBadge(resultset.getString("badgeid")) );
                         GregorianCalendar gc = new GregorianCalendar();
                         gc.setTimeInMillis( resultset.getLong("ts") );
+                        
+                        gc.add(Calendar.HOUR_OF_DAY, -2); // remove this!
+                        
                         p.setOriginalTS(gc);
                         p.setPunchType(resultset.getInt("punchtypeid"));
                    }
@@ -417,6 +420,9 @@ import java.text.SimpleDateFormat;
                     p.setBadge(getBadge(resultset.getString("badgeid")) );
                     GregorianCalendar gc = new GregorianCalendar();
                     gc.setTimeInMillis( resultset.getLong("ts") );
+                    
+                    gc.add(Calendar.HOUR_OF_DAY, -2); // remove this!
+                    
                     p.setOriginalTS(gc);
                     p.setPunchType(resultset.getInt("punchtypeid"));
                     
@@ -520,6 +526,9 @@ import java.text.SimpleDateFormat;
                     p.setBadge(getBadge(resultset.getString("badgeid")) );
                     GregorianCalendar gc = new GregorianCalendar();
                     gc.setTimeInMillis( resultset.getLong("ts") );
+                    
+                    gc.add(Calendar.HOUR_OF_DAY, -2); // remove this!
+                    
                     p.setOriginalTS(gc);
                     p.setPunchType(resultset.getInt("punchtypeid"));
                     

@@ -60,8 +60,9 @@ public class Absenteeism {
         String formattedTime = new SimpleDateFormat("MM-dd-YYYY").format(payTsLong.getTime()).toUpperCase();
         
         //DecimalFormat Format = new DecimalFormat("#.00");  
-        //String percentageString = Format.format(percent);                       
-        return "#" + badgeId + " (Pay Period Starting " + formattedTime + ") :" + percentage + '%';
+        //String percentageString = Format.format(percentage);                       
+        return "#" + badgeId + " (Pay Period Starting " + formattedTime + "):" 
+                + " " + String.format("%.2f", percentage)+ '%';
     }
     
     
