@@ -127,7 +127,7 @@ import java.text.SimpleDateFormat;
                         GregorianCalendar gc = new GregorianCalendar();
                         gc.setTimeInMillis( resultset.getLong("ts") );
                         
-                        gc.add(Calendar.HOUR_OF_DAY, -2); // remove this!
+                        //gc.add(Calendar.HOUR_OF_DAY, -2); // remove this! Only usable for Chen's Computer!
                         
                         p.setOriginalTS(gc);
                         p.setPunchType(resultset.getInt("punchtypeid"));
@@ -421,7 +421,7 @@ import java.text.SimpleDateFormat;
                     GregorianCalendar gc = new GregorianCalendar();
                     gc.setTimeInMillis( resultset.getLong("ts") );
                     
-                    gc.add(Calendar.HOUR_OF_DAY, -2); // remove this!
+                    //gc.add(Calendar.HOUR_OF_DAY, -2); // remove this! Only usable for Chen's Computer!
                     
                     p.setOriginalTS(gc);
                     p.setPunchType(resultset.getInt("punchtypeid"));
@@ -527,7 +527,7 @@ import java.text.SimpleDateFormat;
                     GregorianCalendar gc = new GregorianCalendar();
                     gc.setTimeInMillis( resultset.getLong("ts") );
                     
-                    gc.add(Calendar.HOUR_OF_DAY, -2); // remove this!
+                    //gc.add(Calendar.HOUR_OF_DAY, -2); // remove this!Only usable for Chen's Computer!
                     
                     p.setOriginalTS(gc);
                     p.setPunchType(resultset.getInt("punchtypeid"));
